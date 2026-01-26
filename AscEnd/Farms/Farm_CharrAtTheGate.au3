@@ -21,7 +21,7 @@ Global $CharrPath[7][2] = [ _
 ]
 
 Global $CharrState
-Global $desiredDistance = 960
+Global $desiredDistance = 1000
 Global $hasRun = False
 
 Func Farm_CharrAtTheGate()
@@ -108,8 +108,8 @@ Func CheckQuest()
 EndFunc
 
 Func ExitAscalon()
-    MoveTo(7402, 5599)
-    Map_Move(7310, 5500)
+    MoveTo(7630, 5544)
+    Map_Move(6985, 4939)
     Map_WaitMapLoading(146, 1)
     Sleep(1000)
 EndFunc
@@ -121,10 +121,10 @@ Func CharrAtGate()
     UseSummoningStone()
     RunToCharr($CharrPath)
     Out("Come here you furry bastards!")
-
+    
     Local $targetAgent, $currentDistance, $targetX, $targetY
     Local $myX, $myY, $angle, $newX, $newY
-    
+
     Local $tolerance = 120
     Local $adjustFactor = 0.6
 
@@ -141,7 +141,7 @@ Func CharrAtGate()
             Out("I regret everything that led to this fur-related emergency!")
             UpdateStats()
             ExitLoop
-        ElseIf GetNumberOfFoesInRangeOfAgent(-2, 3000) <= 1 Then
+        ElseIf GetNumberOfCharrInRangeOfAgent(-2, 3500) <= 1 Then
             Out("Run complete. Restarting...")
             UpdateStats()
             ExitLoop
@@ -157,12 +157,14 @@ Func CharrAtGate()
             
             $myX = Agent_GetAgentInfo(-2, "X")
             $myY = Agent_GetAgentInfo(-2, "Y")
-            
+
             $angle = ATan2($targetY - $myY, $targetX - $myX)
-            
+
+
             $newX = $targetX - ($desiredDistance * Cos($angle))
             $newY = $targetY - ($desiredDistance * Sin($angle))
-            
+
+
             $newX = $myX + ($newX - $myX) * $adjustFactor
             $newY = $myY + ($newY - $myY) * $adjustFactor
             
@@ -177,8 +179,4 @@ Func RunToCharr($g_ai2_RunPath)
     For $i = 0 To UBound($g_ai2_RunPath, 1) - 1
         MoveTo($g_ai2_RunPath[$i][0], $g_ai2_RunPath[$i][1])
     Next
-EndFunc
-
-Func ATan2($y, $x)
-    Return ATan($y / $x) + (($x < 0) ? (($y < 0) ? -3.14159265358979 : 3.14159265358979) : 0)
 EndFunc
