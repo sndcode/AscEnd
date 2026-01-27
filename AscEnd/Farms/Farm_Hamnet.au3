@@ -109,9 +109,9 @@ Func Hamnet()
 
     $RunTime = TimerInit()
 
-    Local $deadlock = TimerInit()
+    Local $lDeadlock = TimerInit()
 
-    While TimerDiff($deadlock) < 600000 ; 10 minute deadlock
+    While TimerDiff($lDeadlock) < 600000 ; 10 minute deadlock
         Out("Got imps? ")
         Sleep(250)
         UseSummoningStone()
@@ -130,7 +130,7 @@ Func Hamnet()
         ExitLoop
     WEnd
 
-    If TimerDiff($deadlock) >= 600000 Then
+    If TimerDiff($lDeadlock) >= 600000 Then
         Out("DEADLOCK DETECTED: Run exceeded 10 minutes!")
         Resign()
         Sleep(5000)
