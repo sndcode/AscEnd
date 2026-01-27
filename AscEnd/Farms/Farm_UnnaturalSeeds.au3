@@ -10,26 +10,26 @@
 
 #ce ----------------------------------------------------------------------------
 
-Global $SeedsPath[19][2] = [ _
-    [22556, 6260], _
-    [22216, 4992], _
-    [21428, 3892], _
-    [21028, 2592], _
-    [20128, 1592], _
-    [19728, 392], _
-    [19140, -808], _
-    [18740, -2108], _
-    [17840, -3008], _
-    [17040, -4008], _
-    [16352, -5208], _
-    [16052, -6508], _
-    [15952, -7808], _
-    [16452, -9008], _
-    [17340, -9908], _
-    [17640, -11208], _
-    [18740, -12008], _
-    [20028, -12108], _
-    [20645, -12323] _
+Global $SeedsPath[5][2] = [ _
+    [22434, 4456], _
+    [21710, 3365], _
+    [20471, 2644], _
+    [19902, 1954], _
+    [18979, 342] _
+]
+
+Global $SeedsFoePath[11][2] = [ _
+    [18459, -1404], _
+    [18117, -2672], _
+    [17253, -3751], _
+    [16118, -4523], _
+    [15693, -5676], _
+    [15688, -7657], _
+    [15817, -8699], _
+    [16992, -10330], _
+    [17488, -11398], _
+    [18616, -12186], _
+    [20373, -12225] _
 ]
 
 Func Farm_UnnaturalSeeds()
@@ -98,7 +98,8 @@ Func UnnaturalSeed()
     $RunTime = TimerInit()
 
     UseSummoningStone()
-    RunToSeeds($SeedsPath)
+    RunTo($SeedsPath)
+    RunToSeeds($SeedsFoePath)
     Other_RndSleep(250)
     Out("Run complete. Restarting...")
     UpdateStats()
@@ -113,7 +114,9 @@ EndFunc
 
 Func RunToSeeds($g_ai2_RunPath)
     For $i = 0 To UBound($g_ai2_RunPath, 1) - 1
-        AggroMoveToExFilter($g_ai2_RunPath[$i][0], $g_ai2_RunPath[$i][1], 2500, "UnnaturalSeeds")
+        PickupLoot()
+        Sleep(1000)
+        AggroMoveToExFilter($g_ai2_RunPath[$i][0], $g_ai2_RunPath[$i][1], 1700, "UnnaturalSeeds")
         If SurvivorMode() Then
             Out("Survivor mode activated!")
             Return
@@ -121,17 +124,14 @@ Func RunToSeeds($g_ai2_RunPath)
     Next
 EndFunc
 
-; Use this as an example, to filter out any enemies we want to 'Lock On' to.
-; Target is an enemy and we make sure the target isn't dead, not kicking corpses round 'ere boys!
-; In the function below, Bandits are filtered out using model id's, get the model id of your enemy and away you go.
-Func UnnaturalSeeds($aAgentPtr) ; Custom filter for bandits in the Hamnet farm.
+Func UnnaturalSeeds($aAgentPtr)
 
 	If Agent_GetAgentInfo($aAgentPtr, 'Allegiance') <> 3 Then Return False
     If Agent_GetAgentInfo($aAgentPtr, 'HP') <= 0 Then Return False
     If Agent_GetAgentInfo($aAgentPtr, 'IsDead') > 0 Then Return False
 
     Local $ModelID = Agent_GetAgentInfo($aAgentPtr, 'PlayerNumber')
-    Local $SpiderAloeIDs[6] = [1401, 1403, 1426, 1428, 1429] ; Array of bandit model IDs
+    Local $SpiderAloeIDs[6] = [1401, 1403, 1426, 1428, 1429]
     Local $IsSpiderAloe = False
     For $i = 0 To UBound($SpiderAloeIDs) - 1
         If $ModelID == $SpiderAloeIDs[$i] Then

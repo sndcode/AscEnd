@@ -92,6 +92,12 @@ EndFunc	;==>GetEnergy
 #EndRegion
 
 #Region Movement
+Func RunTo($g_ai2_RunPath)
+    For $i = 0 To UBound($g_ai2_RunPath, 1) - 1
+        MoveTo($g_ai2_RunPath[$i][0], $g_ai2_RunPath[$i][1])
+    Next
+EndFunc
+
 Func MoveTo($aX, $aY, $aRandom = 50)
 	Local $lBlocked = 0
 	Local $lMe

@@ -10,11 +10,10 @@
 
 #ce ----------------------------------------------------------------------------
 
-Global $IrisPath[2][3] = [ _ ; Iris Farm Pre-Searing Path
+Global $IrisPath[2][3] = [ _
     [-10784.77, -5936.46, ""], _
     [-9838.80, -4794.23, "RedIris"] _
 ]
-
 
 Func Farm_RedIris()
 

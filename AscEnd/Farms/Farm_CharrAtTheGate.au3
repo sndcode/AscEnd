@@ -25,6 +25,7 @@ Global $desiredDistance = 1000
 Global $hasRun = False
 
 Func Farm_CharrAtTheGate()
+    
     If CountSlots() < 4 Then InventoryPre()
     If Not $hasBoners Then GetBoners()
 
@@ -117,10 +118,11 @@ EndFunc
 
 Func CharrAtGate()
     $RunTime = TimerInit()
+
     Sleep(3200)
     Out("Lead the way my Prince!")
     UseSummoningStone()
-    RunToCharr($CharrPath)
+    RunTo($CharrPath)
     Out("Come here you furry bastards!")
     
     Local $targetAgent, $currentDistance, $targetX, $targetY
@@ -128,8 +130,9 @@ Func CharrAtGate()
 
     Local $tolerance = 120
     Local $adjustFactor = 0.6
+    Local $maxruntime = TimerInit()
 
-    While 1
+    While TimerDiff($maxruntime) <= 200000
         If GetPartyDead() Then
             Out("Way to go fool, you died!")
             UpdateStats()
@@ -174,10 +177,4 @@ Func CharrAtGate()
         Other_RndSleep(250)
     WEnd
     Resign()
-EndFunc
-
-Func RunToCharr($g_ai2_RunPath)
-    For $i = 0 To UBound($g_ai2_RunPath, 1) - 1
-        MoveTo($g_ai2_RunPath[$i][0], $g_ai2_RunPath[$i][1])
-    Next
 EndFunc
