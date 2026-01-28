@@ -89,7 +89,7 @@ Func CheckQuest()
         Agent_GoNPC(GetNearestNPCToAgent(-2))
         Other_RndSleep(500)
         Ui_Dialog(0x802E01)
-        Other_RndSleep(500)
+        Other_RndSleep(2000)
 
         Quest_ActiveQuest(0x2E)
         $CharrState = Quest_GetQuestInfo(0x2E, "LogState")
