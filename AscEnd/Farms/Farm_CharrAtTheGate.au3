@@ -101,7 +101,7 @@ Func CheckQuest()
         If $CharrState = 1 Then
             LogInfo("Quest acquired!")
         ElseIf ($CharrState = 0) Or ($CharrState = 3) Then
-            LogInfo("Cannot take quest!")
+            LogError("Cannot take quest!")
             LogStatus("Bot will now pause.")
             $BotRunning = False
             Return
