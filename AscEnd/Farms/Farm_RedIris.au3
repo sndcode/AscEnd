@@ -2,11 +2,11 @@
 
 #cs ----------------------------------------------------------------------------
 
-	 AutoIt Version: 3.3.18.0
-	 Author:         Coaxx
+     AutoIt Version: 3.3.18.0
+     Author:         Coaxx
 
-	 Script Function:
-		Red Iris Farm - Pre Searing
+     Script Function:
+        Red Iris Farm - Pre Searing
 
 #ce ----------------------------------------------------------------------------
 
@@ -25,11 +25,11 @@ Func Farm_RedIris()
 
         IrisSetup()
 
-	    While CountSlots() > 1
+        While CountSlots() > 1
             If Not $BotRunning Then ResetStart() Return
 
-		    IrisFarm()
-	    WEnd
+            IrisFarm()
+        WEnd
     WEnd
 EndFunc
 
@@ -61,7 +61,7 @@ Func IrisFarm()
 
     Sleep(1000)
 
-	$RunTime = TimerInit()
+    $RunTime = TimerInit()
 
     UseSummoningStone()
     RunToIris($IrisPath)

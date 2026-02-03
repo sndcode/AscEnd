@@ -2,11 +2,11 @@
 
 #cs ----------------------------------------------------------------------------
 
-	 AutoIt Version: 3.3.18.0
-	 Author:         Coaxx
+     AutoIt Version: 3.3.18.0
+     Author:         Coaxx
 
-	 Script Function:
-		Farmer Hamnet - Pre Searing
+     Script Function:
+        Farmer Hamnet - Pre Searing
 
 #ce ----------------------------------------------------------------------------
 
@@ -160,7 +160,7 @@ EndFunc
 
 Func BanditFilter($aAgentPtr) ; Custom filter for bandits in pre.
 
-	If Agent_GetAgentInfo($aAgentPtr, 'Allegiance') <> 3 Then Return False
+    If Agent_GetAgentInfo($aAgentPtr, 'Allegiance') <> 3 Then Return False
     If Agent_GetAgentInfo($aAgentPtr, 'HP') <= 0 Then Return False
     If Agent_GetAgentInfo($aAgentPtr, 'IsDead') > 0 Then Return False
 

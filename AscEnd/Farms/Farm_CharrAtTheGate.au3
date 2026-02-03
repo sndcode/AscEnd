@@ -2,11 +2,11 @@
 
 #cs ----------------------------------------------------------------------------
 
-	 AutoIt Version: 3.3.18.0
-	 Author:         Coaxx
+     AutoIt Version: 3.3.18.0
+     Author:         Coaxx
 
-	 Script Function:
-		Charr at the Gate - Pre Searing
+     Script Function:
+        Charr at the Gate - Pre Searing
 
 #ce ----------------------------------------------------------------------------
 
@@ -32,13 +32,13 @@ Func Farm_CharrAtTheGate()
     If Not $hasBonus Then GetBonus()
 
     While 1
-		CheckQuest()
+        CheckQuest()
 
         If Not $BotRunning Then ResetStart() Return
             
-		ExitAscalon()
-		CharrAtGate()
-		Sleep(250)
+        ExitAscalon()
+        CharrAtGate()
+        Sleep(250)
     WEnd
 EndFunc
 

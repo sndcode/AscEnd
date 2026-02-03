@@ -2,11 +2,11 @@
 
 #cs ----------------------------------------------------------------------------
 
-	 AutoIt Version: 3.3.18.0
-	 Author:         Coaxx
+     AutoIt Version: 3.3.18.0
+     Author:         Coaxx
 
-	 Script Function:
-		Smart Cast Test - Pre Searing
+     Script Function:
+        Smart Cast Test - Pre Searing
 
 #ce ----------------------------------------------------------------------------
 
@@ -31,11 +31,11 @@ Func Farm_SmartCastTest()
 
         SCSetup()
 
-	    While CountSlots() > 1
+        While CountSlots() > 1
             If Not $BotRunning Then ResetStart() Return
-            
-		    SCTest()
-	    WEnd
+
+            SCTest()
+        WEnd
     WEnd
 EndFunc
 
@@ -67,7 +67,7 @@ Func SCTest()
 
     Sleep(1000)
 
-	$RunTime = TimerInit()
+    $RunTime = TimerInit()
 
     UseSummoningStone()
     Other_RndSleep(250)

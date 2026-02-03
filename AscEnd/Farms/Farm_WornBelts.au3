@@ -2,11 +2,11 @@
 
 #cs ----------------------------------------------------------------------------
 
-	 AutoIt Version: 3.3.18.0
-	 Author:         Coffee
+     AutoIt Version: 3.3.18.0
+     Author:         Coffee
 
-	 Script Function:
-		Worn Belts Farm - Pre Searing
+     Script Function:
+        Worn Belts Farm - Pre Searing
 
 #ce ----------------------------------------------------------------------------
 
@@ -28,11 +28,11 @@ Func Farm_WornBelts()
 
         WornBeltsSetup()
 
-	    While CountSlots() > 1
+        While CountSlots() > 1
             If Not $BotRunning Then ResetStart() Return
 
-		    WornBeltsFarm()
-	    WEnd
+            WornBeltsFarm()
+        WEnd
     WEnd
 EndFunc
 
@@ -81,7 +81,7 @@ Func WornBeltsFarm()
 
     Sleep(1000)
 
-	$RunTime = TimerInit()
+    $RunTime = TimerInit()
 
     UseSummoningStone()
     RunToWB($BeltFarmPath)

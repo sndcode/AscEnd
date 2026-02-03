@@ -2,11 +2,11 @@
 
 #cs ----------------------------------------------------------------------------
 
-	 AutoIt Version: 3.3.18.0
-	 Author:         Coaxx
+     AutoIt Version: 3.3.18.0
+     Author:         Coaxx
 
-	 Script Function:
-		Unnatural Seed Farm - Pre Searing
+     Script Function:
+        Unnatural Seed Farm - Pre Searing
 
 #ce ----------------------------------------------------------------------------
 
@@ -130,7 +130,7 @@ EndFunc
 
 Func UnnaturalSeeds($aAgentPtr)
 
-	If Agent_GetAgentInfo($aAgentPtr, 'Allegiance') <> 3 Then Return False
+    If Agent_GetAgentInfo($aAgentPtr, 'Allegiance') <> 3 Then Return False
     If Agent_GetAgentInfo($aAgentPtr, 'HP') <= 0 Then Return False
     If Agent_GetAgentInfo($aAgentPtr, 'IsDead') > 0 Then Return False
 
