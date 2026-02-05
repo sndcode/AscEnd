@@ -69,7 +69,7 @@ Func SCTest()
 
     $RunTime = TimerInit()
 
-    UseSummoningStone()
+    ;UseSummoningStone()
     Other_RndSleep(250)
     RunToSC($SCPath)
     Other_RndSleep(250)
@@ -86,7 +86,7 @@ EndFunc
 
 Func RunToSC($g_a_RunPath)
     For $i = 0 To UBound($g_a_RunPath) - 1
-        AggroMoveToExFilter($g_a_RunPath[$i][0], $g_a_RunPath[$i][1])
+        MoveTo($g_a_RunPath[$i][0], $g_a_RunPath[$i][1], 50, True)
         If SurvivorMode() Then
             LogError("Survivor mode activated!")
             Return

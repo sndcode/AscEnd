@@ -102,6 +102,7 @@ Func RunSelectedFarm()
             If $g_a_Farms[$i][1] = "" Then Return False
 
             AdlibRegister("UpdateTotalTime", 1000)
+            AdlibRegister("UpdateProgress", 1500)
             $TotalTime = TimerInit()
             UpdateStats()
             LogInfo("Starting farm: " & $FarmToRun)

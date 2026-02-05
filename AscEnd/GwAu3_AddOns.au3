@@ -98,9 +98,8 @@ Func RunTo($g_ai2_RunPath)
     Next
 EndFunc
 
-Func MoveTo($aX, $aY, $aRandom = 50)
+Func MoveTo($aX, $aY, $aRandom = 50, $aFightBack = False)
 	Local $lBlocked = 0
-	Local $lMe
 	Local $lMapLoading = Map_GetInstanceInfo("Type"), $lMapLoadingOld
 	Local $lDestX = $aX + Random(-$aRandom, $aRandom)
 	Local $lDestY = $aY + Random(-$aRandom, $aRandom)
@@ -113,12 +112,24 @@ Func MoveTo($aX, $aY, $aRandom = 50)
 	Do
 		Sleep(100)
 
-		If GetPartyDead() Then ExitLoop
+		If GetPartyDead() Then Return
 		If SurvivorMode(40) Then Return
 
 		$lMapLoadingOld = $lMapLoading
 		$lMapLoading = Map_GetInstanceInfo("Type")
-		If $lMapLoading <> $lMapLoadingOld Then ExitLoop
+		If $lMapLoading <> $lMapLoadingOld Then Return
+
+		; Check for enemies attacking us and fight back
+		If $aFightBack Then
+			Local $nearestEnemy = GetNearestEnemyToAgent(-2, 1500, $GC_I_AGENT_TYPE_LIVING, 1, "EnemyFilter")
+			If $nearestEnemy <> 0 Then
+				If Agent_GetAgentInfo($nearestEnemy, "IsAttacking") Then  
+					Local $myX = Agent_GetAgentInfo(-2, "X")
+					Local $myY = Agent_GetAgentInfo(-2, "Y")
+                    UAI_Fight($myX, $myY, 400, 200, $g_i_FightMode)
+				EndIf
+			EndIf
+		EndIf
 
 		If Agent_GetAgentInfo(-2, "MoveX") == 0 And Agent_GetAgentInfo(-2, "MoveY") == 0 Then
 			$lBlocked += 1

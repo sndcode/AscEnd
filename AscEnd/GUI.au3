@@ -6,6 +6,17 @@
 #include <StaticConstants.au3>
 #include <WindowsConstants.au3>
 #include <Date.au3>
+#include <TabConstants.au3>
+#include <ProgressConstants.au3>
+#include <GuiTab.au3>
+
+; Total exp for each level
+Global $g_aLevelXP[20] = [ _
+    0, 2000, 4600, 7800, 11600, 16000, 21000, _
+    26600, 32800, 39600, 47000, 55000, 63600, _
+    72800, 82600, 93000, 104000, 115600, _
+    127800, 140600 _
+]
 
 Global $aVanguardQuests[9][2] = [ _
     [0, "V Bounty - Blazefiend Griefblade"], _; ANCHOR
@@ -47,11 +58,10 @@ Func _NowUTC()
 EndFunc
 
 ; Main Form
-$MainGui = GUICreate($BotTitle, 496, 361, 273, 216, -1, BitOR($WS_EX_TOPMOST,$WS_EX_WINDOWEDGE))
-GUISetBkColor(0xEAEAEA, $MainGui)
+$MainGui = GUICreate($BotTitle, 496, 400, 449, 181, -1, BitOR($WS_EX_TOPMOST,$WS_EX_WINDOWEDGE))
 
 ; Combo Boxes For Character Selection & Farms
-$Group3 = GUICtrlCreateGroup("", 8, 7, 480, 345)
+$Group3 = GUICtrlCreateGroup("", 8, 7, 480, 383, -1,  $WS_EX_TRANSPARENT)
 $Group1 = GUICtrlCreateGroup("Select Your Character", 16, 24, 193, 49)
 
 Global $GUINameCombo
@@ -61,6 +71,7 @@ If $doLoadLoggedChars Then
 Else
     $GUINameCombo = GUICtrlCreateInput($g_s_MainCharName, 24, 40, 177, 25)
 EndIf
+GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 Global $FarmCombo
 $Group2 = GUICtrlCreateGroup("Select Farm", 16, 76, 193, 49)
@@ -69,6 +80,7 @@ $FarmCombo = GUICtrlCreateCombo("", 24, 92, 177, 25, BitOR($CBS_DROPDOWN,$CBS_AU
 For $i = 0 To UBound($g_a_Farms) - 1
     GUICtrlSetData($FarmCombo, $g_a_Farms[$i][0])
 Next
+GUICtrlCreateGroup("", -99, -99, 1, 1)
 
 ; CheckBox Options
 ; Survivor Mode, 19 Stop, Purple & Collectors
@@ -78,7 +90,7 @@ Global Const $OPT_COLLECTOR = 4
 Global Const $OPT_19STOP    = 8
 
 
-$Loot = GUICtrlCreateGroup("Loot", 16, 129, 85, 57)
+$Loot = GUICtrlCreateGroup("Keep", 16, 129, 85, 57)
 $GUI_CBPurple = GUICtrlCreateCheckbox("Purple?", 24, 145, 73, 17, BitOR($GUI_SS_DEFAULT_CHECKBOX,$BS_LEFT))
 $GUI_CBCollector = GUICtrlCreateCheckbox("Collectors?", 24, 162, 73, 17, BitOR($GUI_SS_DEFAULT_CHECKBOX,$BS_LEFT))
 GUICtrlCreateGroup("", -99, -99, 1, 1)
@@ -120,30 +132,81 @@ GUICtrlSetOnEvent($GUIRefreshButton, "GuiButtonHandler")
 $g_h_EditText = _GUICtrlRichEdit_Create($MainGui, "", 16, 197, 341, 114, BitOR($ES_AUTOVSCROLL, $ES_MULTILINE, $WS_VSCROLL, $ES_READONLY), $WS_EX_STATICEDGE)
 _GUICtrlRichEdit_SetBkColor($g_h_EditText, $COLOR_WHITE)
 
-; Images and Labels
+; Images, Tabs and Labels
 $Pic1 = GUICtrlCreatePic("nudes\AscEnd4.jpg", 371, 31, 108, 279)
 $Label3 = GUICtrlCreateLabel("Run Time:", 242, 70, 53, 17)
 $Label4 = GUICtrlCreateLabel("Total Time:", 238, 87, 57, 17)
-$Label5 = GUICtrlCreateLabel("Red Iris:", 289, 171, 43, 17)
-$Label6 = GUICtrlCreateLabel("Unnatural Seeds:", 246, 108, 86, 17)
-$Label7 = GUICtrlCreateLabel("Icy Lodestones:", 253, 139, 79, 17)
-$Label8 = GUICtrlCreateLabel("Spider Legs:", 269, 124, 63, 17)
-$Label9 = GUICtrlCreateLabel("Gargoyle Skulls:", 252, 155, 80, 17)
-Global $RunTimeLbl = GUICtrlCreateLabel("00:00:00", 293, 70, 46, 17)
-Global $TotalTimeLbl = GUICtrlCreateLabel("00:00:00", 293, 87, 46, 17)
-Global $rediriscount = GUICtrlCreateLabel("0", 330, 171, 10, 17)
-Global $seeds = GUICtrlCreateLabel("0", 330, 108, 10, 17)
-Global $icylodestones = GUICtrlCreateLabel("0", 330, 139, 10, 17)
-Global $spiderlegs = GUICtrlCreateLabel("0", 330, 124, 10, 17)
-Global $gargskulls = GUICtrlCreateLabel("0", 330, 155, 10, 17)
-
-
-; Seperator and Current Quest
-Global $CurrentVanguardQuest = "Current: " & _GetVanguardQuestByOffset(0) & "  |  Next: " & _GetVanguardQuestByOffset(1)
-$Label1 = GUICtrlCreateLabel("Seperator", 13, 327, 473, 2, $SS_ETCHEDHORZ, BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
-$Label2 = GUICtrlCreateLabel($CurrentVanguardQuest, 15, 332, 465, 17, $SS_CENTER)
-
+$RunTimeLbl = GUICtrlCreateLabel("00:00:00", 293, 70, 46, 17)
+$TotalTimeLbl = GUICtrlCreateLabel("00:00:00", 293, 87, 46, 17)
 GUICtrlCreateGroup("", -99, -99, 1, 1)
+
+$Tab1 = GUICtrlCreateTab(224, 104, 134, 83)
+GUICtrlSetFont(-1, 6, 400, 0, "Arial")
+$TabSheet1 = GUICtrlCreateTabItem("1")
+GUICtrlSetState(-1,$GUI_SHOW)
+$Label7 = GUICtrlCreateLabel("Red Iris:", 280, 125, 43, 17, $SS_RIGHT)
+$Label8 = GUICtrlCreateLabel("Baked Husk:", 257, 140, 66, 17, $SS_RIGHT)
+$Label9 = GUICtrlCreateLabel("Charr Carving:", 252, 155, 71, 17, $SS_RIGHT)
+$Label10 = GUICtrlCreateLabel("Enchanted Lodes:", 232, 170, 91, 17, $SS_RIGHT)
+$red_iris = GUICtrlCreateLabel("0", 323, 126, 30, 17, $SS_CENTER)
+$baked_husk = GUICtrlCreateLabel("0", 323, 141, 30, 17, $SS_CENTER)
+$charr_carv = GUICtrlCreateLabel("0", 323, 156, 30, 17, $SS_CENTER)
+$ench_lodes = GUICtrlCreateLabel("0", 323, 171, 30, 17, $SS_CENTER)
+$TabSheet2 = GUICtrlCreateTabItem("2")
+$Label11 = GUICtrlCreateLabel("Skale Fin:", 272, 125, 51, 17, $SS_RIGHT)
+$Label12 = GUICtrlCreateLabel("Grawl Necklace:", 240, 140, 83, 17, $SS_RIGHT)
+$Label13 = GUICtrlCreateLabel("Unnatural Seeds:", 237, 155, 86, 17, $SS_RIGHT)
+$Label14 = GUICtrlCreateLabel("Icy Lodes:", 270, 170, 53, 17, $SS_RIGHT)
+$skale_fin = GUICtrlCreateLabel("0", 323, 126, 30, 17, $SS_CENTER)
+$grawl_neck = GUICtrlCreateLabel("0", 323, 141, 30, 17, $SS_CENTER)
+$unnatural_seeds = GUICtrlCreateLabel("0", 323, 156, 30, 17, $SS_CENTER)
+$icy_lodes = GUICtrlCreateLabel("0", 323, 171, 30, 17, $SS_CENTER)
+$TabSheet3 = GUICtrlCreateTabItem("3")
+$Label15 = GUICtrlCreateLabel("Dull Carapace:", 249, 125, 74, 17, $SS_RIGHT)
+$Label16 = GUICtrlCreateLabel("Spider Leg:", 249, 140, 74, 17, $SS_RIGHT)
+$Label17 = GUICtrlCreateLabel("Skeletal Limb:", 249, 155, 74, 17, $SS_RIGHT)
+$Label18 = GUICtrlCreateLabel("Gargoyle Skull:", 249, 170, 74, 17, $SS_RIGHT)
+$dull_carap = GUICtrlCreateLabel("0", 323, 126, 30, 17, $SS_CENTER)
+$spider_leg = GUICtrlCreateLabel("0", 323, 141, 30, 17, $SS_CENTER)
+$skeletal_limb = GUICtrlCreateLabel("0", 323, 156, 30, 17, $SS_CENTER)
+$gargoyle_skull = GUICtrlCreateLabel("0", 323, 171, 30, 17, $SS_CENTER)
+GUICtrlCreateTabItem("")
+
+; Seperators and Current Quest
+Global $CurrentVanguardQuest = "Current: " & _GetVanguardQuestByOffset(0) & "  |  Next: " & _GetVanguardQuestByOffset(1)
+GUICtrlCreateLabel("", 13, 327, 473, 2, $SS_ETCHEDHORZ, BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
+$CVQ_Label = GUICtrlCreateLabel($CurrentVanguardQuest, 15, 333, 473, 17, $SS_CENTER)
+GUICtrlCreateLabel("", 13, 351, 473, 2, $SS_ETCHEDHORZ, BitOR($WS_EX_CLIENTEDGE,$WS_EX_STATICEDGE))
+
+; Progress bar and level indicator
+$Progress = GUICtrlCreateProgress(15, 362, 465, 17, $PBS_SMOOTH)
+GUICtrlSetColor(-1, 0x00FF00)
+
+Func GetXPBarPercent($Level)
+    Local $iXP = World_GetWorldInfo("Experience")
+
+    ; Safety for max level
+    If $Level >= UBound($g_aLevelXP) - 1 Then Return 100
+
+    Local $iXPThisLevel = $g_aLevelXP[$Level]
+    Local $iXPNextLevel = $g_aLevelXP[$Level + 1]
+
+    Local $iIntoLevel = $iXP - $iXPThisLevel
+    Local $iRange = $iXPNextLevel - $iXPThisLevel
+
+    If $iRange <= 0 Then Return 100
+
+    Return Int(($iIntoLevel / $iRange) * 100)
+EndFunc
+
+Global $Level = 0
+Global $oldLevel = 0
+$levellbl = GUICtrlCreateLabel("Level: " & $Level, 224, 364, 48, 17)
+GUICtrlSetFont(-1, 9, 400, 0, "MS Sans Serif")
+GUICtrlSetColor(-1, 0x008000)
+GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
+GUICtrlCreateGroup("", -99, -99, 1, 1)
+
 GUISetOnEvent($GUI_EVENT_CLOSE, "GuiButtonHandler")
 GUISetState(@SW_SHOW)
 
@@ -232,15 +295,33 @@ EndFunc
 
 Func UpdateStats()
     GUICtrlSetData($RunTimeLbl, FormatElapsedTime($RunTime))
-    GUICtrlSetData($rediriscount, GetItemCountByModelID($GC_I_MODELID_RED_IRIS_FLOWER))
-    GUICtrlSetData($seeds, GetItemCountByModelID($GC_I_MODELID_UNNATURAL_SEED))
-    GUICtrlSetData($icylodestones, GetItemCountByModelID($GC_I_MODELID_ICY_LODESTONE))
-    GUICtrlSetData($spiderlegs, GetItemCountByModelID($GC_I_MODELID_SPIDER_LEG))
-    GUICtrlSetData($gargskulls, GetItemCountByModelID($GC_I_MODELID_GARGOYLE_SKULL))
+    GUICtrlSetData($red_iris, GetItemCountByModelID($GC_I_MODELID_RED_IRIS_FLOWER))
+    GUICtrlSetData($baked_husk, GetItemCountByModelID($GC_I_MODELID_BAKED_HUSK))
+    GUICtrlSetData($charr_carv, GetItemCountByModelID($GC_I_MODELID_CHARR_CARVING))
+    GUICtrlSetData($ench_lodes, GetItemCountByModelID($GC_I_MODELID_ENCHANTED_LODESTONE))
+    GUICtrlSetData($skale_fin, GetItemCountByModelID($GC_I_MODELID_SKALE_FIN_PRE))
+    GUICtrlSetData($grawl_neck, GetItemCountByModelID($GC_I_MODELID_GRAWL_NECKLACE))
+    GUICtrlSetData($unnatural_seeds, GetItemCountByModelID($GC_I_MODELID_UNNATURAL_SEED))
+    GUICtrlSetData($icy_lodes, GetItemCountByModelID($GC_I_MODELID_ICY_LODESTONE))
+    GUICtrlSetData($dull_carap, GetItemCountByModelID($GC_I_MODELID_DULL_CARAPACE))
+    GUICtrlSetData($spider_leg, GetItemCountByModelID($GC_I_MODELID_SPIDER_LEG))
+    GUICtrlSetData($skeletal_limb, GetItemCountByModelID($GC_I_MODELID_SKELETAL_LIMB))
+    GUICtrlSetData($gargoyle_skull, GetItemCountByModelID($GC_I_MODELID_GARGOYLE_SKULL))
 EndFunc
 
 Func UpdateTotalTime()
     GUICtrlSetData($TotalTimeLbl, FormatElapsedTime($TotalTime))
+EndFunc
+
+Func UpdateProgress()
+    If Map_GetInstanceInfo("Type") <> $GC_I_MAP_TYPE_LOADING Then
+        $Level = Agent_GetAgentInfo(-2, "Level")
+        If $Level <> $oldLevel Then
+            GUICtrlSetData($levellbl, "Level: " & $Level)
+            GUICtrlSetData($Progress, GetXPBarPercent($Level))
+            $oldLevel = $Level
+        EndIf
+    EndIf
 EndFunc
 
 Func ResetStart()
