@@ -326,6 +326,11 @@ EndFunc
 
 Func ResetStart()
     GUICtrlSetState($GUIStartButton, $GUI_ENABLE)
+    GUICtrlSetState($FarmCombo, $GUI_ENABLE)
+    GUICtrlSetState($GUI_CBSurvivor, $GUI_ENABLE)
+    GUICtrlSetState($GUI_CBPurple, $GUI_ENABLE)
+    GUICtrlSetState($GUI_CBCollector, $GUI_ENABLE)
+    GUICtrlSetState($GUI_CB19Stop, $GUI_ENABLE)
     GUICtrlSetData($GUIStartButton, "Start")
     LogStatus("Bot paused.")
     Sleep(500)
