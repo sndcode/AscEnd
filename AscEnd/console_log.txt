@@ -1,19 +1,29 @@
 
-[23:23:15] [INFO] Based on GWA2
-[23:23:15] [INFO] GWA2 - Created by: GameRevision Community
-[23:23:15] [INFO] GWA2 - Build date: approximately 2007
+[17:32:07] [INFO] Based on GWA2
+[17:32:07] [INFO] GWA2 - Created by: GameRevision Community
+[17:32:07] [INFO] GWA2 - Build date: approximately 2007
 
-[23:23:15] [INFO] GwAu3 - Created by: Jag-Gw Community
-[23:23:15] [INFO] GwAu3 - Build date: 2025-05-21
-[23:23:15] [INFO] GwAu3 - Version: 1.0
-[23:23:15] [INFO] GwAu3 - Last Update: 2025-06-17
+[17:32:07] [INFO] GwAu3 - Created by: Jag-Gw Community
+[17:32:07] [INFO] GwAu3 - Build date: 2025-05-21
+[17:32:07] [INFO] GwAu3 - Version: 1.0
+[17:32:07] [INFO] GwAu3 - Last Update: 2025-06-17
 
-[23:23:29] [STATUS] Survivor mode enabled.
-[23:23:29] [STATUS] Discarding Purples.
-[23:23:30] [STATUS] Keeping Collectors materials.
-[23:23:30] [STATUS] Sending to level 20.
-[23:23:30] [INFO] Starting farm: Smart Cast Test
-[23:23:34] [INFO] Summoning stone found!
-[23:23:35] [INFO] We are not in Ashford Abbey. Teleporting to Ashford...
-[23:23:42] [INFO] What a lovely day to pick some flowers.
-[23:24:41] [EXIT] Script terminated. ExitCode=0
+[17:32:48] [STATUS] Survivor mode enabled.
+[17:32:48] [STATUS] Discarding Purples.
+[17:32:48] [STATUS] Keeping Collectors materials.
+[17:32:48] [STATUS] Sending to level 20.
+[17:32:48] [INFO] Starting farm: Worn Belts
+[17:32:49] [INFO] Summoning stone found!
+[17:32:51] [INFO] Lets kill some Belt Thieves!
+[17:32:51] [INFO] We are not in Ashford Abbey. Teleporting to Ashford...
+[17:33:00] [INFO] Mhenlo's smiling, Meerak's humming, and I'm picking red irises..
+[17:33:38] [WARN] Fighting enemies with the Bandit filter!
+[17:33:51] [WARN] Fighting enemies with the Bandit filter!
+[17:34:47] [WARN] HP low (90%), need healing!
+[17:34:47] [WARN] Using healing skill: Healing Signet
+[17:34:58] [WARN] HP low (87%), need healing!
+[17:34:58] [WARN] Using healing skill: Healing Signet
+[17:35:28] [WARN] Fighting enemies with the Bandit filter!
+[17:35:31] [INFO] Worn Belts Farm complete. Restarting...
+[17:35:52] [WARN] Fighting enemies with the Bandit filter!
+[17:36:03] [EXIT] Script terminated. ExitCode=0

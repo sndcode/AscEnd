@@ -11,9 +11,6 @@
 #ce ----------------------------------------------------------------------------
 
 Func Farm_Blank()
-    Cache_SkillBar()
-    Sleep(2000)
-    
     While 1
         If CountSlots() < 4 Then InventoryPre()
         If Not $hasBonus Then GetBonus()
@@ -21,7 +18,10 @@ Func Farm_Blank()
         BlankSetup()
 
         While CountSlotS() > 1
-            If Not $BotRunning Then ResetStart() Return
+            If Not $BotRunning Then
+                ResetStart()
+                Return
+            EndIf
 
             Blank()
         WEnd

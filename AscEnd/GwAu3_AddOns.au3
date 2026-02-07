@@ -124,9 +124,7 @@ Func MoveTo($aX, $aY, $aRandom = 50, $aFightBack = False)
 			Local $nearestEnemy = GetNearestEnemyToAgent(-2, 1500, $GC_I_AGENT_TYPE_LIVING, 1, "EnemyFilter")
 			If $nearestEnemy <> 0 Then
 				If Agent_GetAgentInfo($nearestEnemy, "IsAttacking") Then  
-					Local $myX = Agent_GetAgentInfo(-2, "X")
-					Local $myY = Agent_GetAgentInfo(-2, "Y")
-                    UAI_Fight($myX, $myY, 400, 200, $g_i_FightMode)
+					FightExFilter(400)
 				EndIf
 			EndIf
 		EndIf
@@ -186,8 +184,75 @@ Local $lDestY = $aY + Random(-$aRandom, $aRandom)
 EndFunc   ;==>MoveUpkeepEx
 #EndRegion
 
+#Region Healing
+
+; Healing skill IDs for Pre-Searing
+Global $g_aHealingSkills[9] = [ _
+    $GC_I_SKILL_ID_ETHER_FEAST, _
+    $GC_I_SKILL_ID_HEALING_SIGNET, _
+    $GC_I_SKILL_ID_ORISON_OF_HEALING, _
+    $GC_I_SKILL_ID_HEALING_BREEZE, _
+    $GC_I_SKILL_ID_DIVINE_HEALING, _
+    $GC_I_SKILL_ID_HEAL_AREA, _
+    $GC_I_SKILL_ID_REVERSAL_OF_FORTUNE, _
+    $GC_I_SKILL_ID_HEALING_SPRING, _
+    $GC_I_SKILL_ID_TROLL_UNGUENT  _
+]
+
+; Check if skill ID is a healing skill
+Func IsHealingSkill($skillID)
+    For $i = 0 To UBound($g_aHealingSkills) - 1
+        If $skillID = $g_aHealingSkills[$i] Then Return True
+    Next
+    Return False
+EndFunc
+
+; Get first recharged healing skill on bar
+Func GetHealOnBar()
+    For $slot = 1 To 8
+        Local $skillID = Skill_GetSkillbarInfo($slot, "SkillID")
+        If IsHealingSkill($skillID) Then
+            If IsRecharged($slot) Then Return $slot
+        EndIf
+    Next
+    Return 0
+EndFunc
+
+; Check if HP is below threshold percentage
+Func NeedHeal($Threshold = 70)
+    If Agent_GetAgentInfo(-2, 'CurrentHP') <= Agent_GetAgentInfo(-2, 'MaxHP') * ($Threshold / 100) Then
+        Local $currentHP = Agent_GetAgentInfo(-2, 'CurrentHP')
+        Local $maxHP = Agent_GetAgentInfo(-2, 'MaxHP')
+        Local $hpPercent = Int(($currentHP / $maxHP) * 100)
+        LogWarn("HP low (" & $hpPercent & "%), need healing!")
+        Return True
+    EndIf
+    Return False
+EndFunc
+
+; Use one healing skill and return
+Func UseHeal()
+    Local $healSlot = GetHealOnBar()
+    If $healSlot = 0 Then Return False
+    
+    Local $skillID = Skill_GetSkillbarInfo($healSlot, "SkillID")
+    Local $skillName = Skill_GetSkillInfo($skillID, "SkillName")
+	Local $energyCost = Skill_GetSkillInfo($skillID, "EnergyCost")
+    
+    Do
+        Sleep(250)
+    Until GetEnergy(-2) >= $energyCost
+
+    LogWarn("Using healing skill: " & $skillName)
+    
+    UseSkillEx($healSlot, -2)
+    
+    Return True
+EndFunc
+#EndRegion
+
 #Region Fighting
-Func AggroMoveToExFilter($aX, $aY, $a_f_AggroRange = 1700, $filterFunc = "EnemyFilter")
+Func AggroMoveToExFilter($aX, $aY, $AggroRange = 1700, $filterFunc = "EnemyFilter")
 
     If GetPartyDead() Then Return
     $TimerToKill = TimerInit()
@@ -200,33 +265,28 @@ Func AggroMoveToExFilter($aX, $aY, $a_f_AggroRange = 1700, $filterFunc = "EnemyF
     $coords[0] = Agent_GetAgentInfo(-2, 'X')
     $coords[1] = Agent_GetAgentInfo(-2, 'Y')
     
-	If $filterFunc = "EnemyFilter" Then LogWarn("Fighting enemies with SmartCast!")
+	If $filterFunc = "EnemyFilter" Then
+		LogWarn("Fighting enemies!")
+	Else
+		LogWarn("Fighting enemies with the " & StringReplace($filterfunc, "Filter", "") & " filter!")
+	EndIf
 
     Do
         If GetPartyDead() Then ExitLoop
         Other_RndSleep(250)
         $oldCoords = $coords
         
-        ; Check filter type
-        If $filterFunc = "EnemyFilter" Then
-            ; Use standard UAI_Fight with SmartCast
-            If Map_GetInstanceInfo("Type") = $GC_I_MAP_TYPE_EXPLORABLE Then
-                UAI_Fight($coords[0], $coords[1], $a_f_AggroRange, 3500, $g_i_FightMode)
-            EndIf
-        Else
-            ; Use custom filter with FightExFilter
-            If GetNumberOfFoesInRangeOfAgent(-2, 1700, $GC_I_AGENT_TYPE_LIVING, 1, $filterFunc) > 0 Then
-                If GetPartyDead() Then ExitLoop
-                $enemy = GetNearestEnemyToAgent(-2, 1700, $GC_I_AGENT_TYPE_LIVING, 1, $filterFunc)
-                If GetPartyDead() Then ExitLoop
-                $distance = ComputeDistance(Agent_GetAgentInfo($enemy, 'X'), Agent_GetAgentInfo($enemy, 'Y'), Agent_GetAgentInfo(-2, 'X'), Agent_GetAgentInfo(-2, 'Y'))
-                If $distance < $a_f_AggroRange And $enemy <> 0 And Not GetPartyDead() Then
-                    LogWarn("Filtering enemies with " & $filterFunc & "!")
-                    FightExFilter($a_f_AggroRange, $filterFunc)
-                    If SurvivorMode() Then Return
-                EndIf
-            EndIf
-        EndIf
+		; Use custom filter with FightExFilter
+		If GetNumberOfFoesInRangeOfAgent(-2, 1700, $GC_I_AGENT_TYPE_LIVING, 1, $filterFunc) > 0 Then
+			If GetPartyDead() Then ExitLoop
+			$enemy = GetNearestEnemyToAgent(-2, 1700, $GC_I_AGENT_TYPE_LIVING, 1, $filterFunc)
+			If GetPartyDead() Then ExitLoop
+			$distance = ComputeDistance(Agent_GetAgentInfo($enemy, 'X'), Agent_GetAgentInfo($enemy, 'Y'), Agent_GetAgentInfo(-2, 'X'), Agent_GetAgentInfo(-2, 'Y'))
+			If $distance < $AggroRange And $enemy <> 0 And Not GetPartyDead() Then
+				FightExFilter($AggroRange, $filterFunc)
+				If SurvivorMode() Then Return
+			EndIf
+		EndIf
 
 		Other_RndSleep(250)
 		
@@ -250,32 +310,42 @@ Func AggroMoveToExFilter($aX, $aY, $a_f_AggroRange = 1700, $filterFunc = "EnemyF
     Until ComputeDistance($coords[0], $coords[1], $aX, $aY) < 250 Or $iBlocked > 20 Or GetPartyDead() Or TimerDiff($TimerToKill) > 180000
 EndFunc   ;==>AggroMoveToExFilter
 
-Func FightExFilter($a_f_AggroRange, $filterFunc = "EnemyFilter")
+Func FightExFilter($AggroRange, $filterFunc = "EnemyFilter")
 	If GetPartyDead() Then Return
 	If SurvivorMode() Then Return
+	
 	Local $target
 	Local $distance
 	Local $useSkill
 	Local $energy
 	Local $lastId = 99999, $coordinate[2], $timer
+
 		Do
 			If GetNumberOfFoesInRangeOfAgent(-2, 1700) = 0 Then Exitloop
 			If TimerDiff($TimerToKill) > 180000 Then Exitloop
 			If GetPartyDead() Then Exitloop
 			If SurvivorMode() Then Return
+
+			; Check for healing before engaging target
+			If NeedHeal(95) Then UseHeal()
+
 			$target = GetNearestEnemyToAgent(-2, 1700, $GC_I_AGENT_TYPE_LIVING, 1, $filterFunc)
 			If GetPartyDead() Then Exitloop
 			If SurvivorMode() Then Return
 			$distance = ComputeDistance(Agent_GetAgentInfo($target, 'X'), Agent_GetAgentInfo($target, 'Y'), Agent_GetAgentInfo(-2, 'X'), Agent_GetAgentInfo(-2, 'Y'))
-			If $target <> 0 AND $distance < $a_f_AggroRange And Not GetPartyDead() Then
+			
+			If $target <> 0 AND $distance < $AggroRange And Not GetPartyDead() Then
 				If TimerDiff($TimerToKill) > 180000 Then Exitloop
+				
 				If Agent_GetAgentInfo($target, 'ID') <> $lastId Then
 					If GetPartyDead() Then Exitloop
 					If SurvivorMode() Then Return
+					
 					Agent_ChangeTarget($target)
 					Other_RndSleep(150)
 					Agent_CallTarget($target)
 					Other_RndSleep(150)
+					
 					If GetPartyDead() Then Exitloop
 					If SurvivorMode() Then Return
 					Agent_Attack($target)
@@ -287,6 +357,7 @@ Func FightExFilter($a_f_AggroRange, $filterFunc = "EnemyFilter")
 					If GetPartyDead() Then Exitloop
 					If SurvivorMode() Then Return
 					If $distance > 1100 Then
+
 						Do
 							If GetNumberOfFoesInRangeOfAgent(-2, 1700) = 0 Then Exitloop
 							If TimerDiff($TimerToKill) > 180000 Then Exitloop
@@ -298,25 +369,34 @@ Func FightExFilter($a_f_AggroRange, $filterFunc = "EnemyFilter")
 							If SurvivorMode() Then Return
 							$distance = ComputeDistance($coordinate[0], $coordinate[1], Agent_GetAgentInfo(-2, 'X'), Agent_GetAgentInfo(-2, 'Y'))
 						Until $distance < 1100 Or TimerDiff($timer) > 10000 Or GetPartyDead() Or TimerDiff($TimerToKill) > 180000
+					
 					EndIf
 				EndIf
+
 				If TimerDiff($TimerToKill) > 180000 Then Exitloop
 				Other_RndSleep(150)
 				$timer = TimerInit()
 				If GetPartyDead() Then Exitloop
 				If SurvivorMode() Then Return
+					
 					Do
 						If GetNumberOfFoesInRangeOfAgent(-2, 1700) = 0 Then Exitloop
 						If TimerDiff($TimerToKill) > 180000 Then Exitloop
 						If GetPartyDead() Then Exitloop
 						If SurvivorMode() Then Return
+						
+						; Check for healing during combat (more aggressive threshold)
+						If NeedHeal(95) Then UseHeal()
+
 						$target = GetNearestEnemyToAgent(-2, 1700, $GC_I_AGENT_TYPE_LIVING, 1, $filterFunc)
 						If GetPartyDead() Then Exitloop
 						If SurvivorMode() Then Return
 						$distance = GetDistance($target, -2)
+
 						If $distance < 1250 And Not GetPartyDead() Then
 							If GetNumberOfFoesInRangeOfAgent(-2, 1700) = 0 Then Exitloop
 							If TimerDiff($TimerToKill) > 180000 Then Exitloop
+							
 							For $i = 0 To 7
 								If GetNumberOfFoesInRangeOfAgent(-2, 1700) = 0 Then Exitloop
 								If TimerDiff($TimerToKill) > 180000 Then Exitloop
@@ -325,11 +405,17 @@ Func FightExFilter($a_f_AggroRange, $filterFunc = "EnemyFilter")
 								If Agent_GetAgentInfo($target, 'IsDead') Then ExitLoop
 
 								$distance = GetDistance($target, -2)
-								If $distance > $a_f_AggroRange Then ExitLoop
+								If $distance > $AggroRange Then ExitLoop
 
 								$energy = GetEnergy(-2)
 
-								If IsRecharged($i+1) And $energy >= Skill_GetSkillInfo(Skill_GetSkillbarInfo($i, "SkillID"), "EnergyCost") And Not GetPartyDead() Then
+								; Get skill ID for current slot
+								Local $currentSkillID = Skill_GetSkillbarInfo($i+1, "SkillID")
+						
+								; Skip healing skills - they're handled separately
+								If IsHealingSkill($currentSkillID) Then ContinueLoop
+
+								If IsRecharged($i+1) And $energy >= Skill_GetSkillInfo(Skill_GetSkillbarInfo($i+1, "SkillID"), "EnergyCost") And Not GetPartyDead() Then
 									If GetNumberOfFoesInRangeOfAgent(-2, 1700) = 0 Then Exitloop
 									If TimerDiff($TimerToKill) > 180000 Then Exitloop
 									$useSkill = $i + 1
@@ -340,19 +426,22 @@ Func FightExFilter($a_f_AggroRange, $filterFunc = "EnemyFilter")
 									Agent_Attack($target)
 									Other_RndSleep(150)
 								EndIf
+
 								If TimerDiff($TimerToKill) > 180000 Then Exitloop
 								If $i = 7 Then $i = -1 ; change -1
 								If GetPartyDead() Then Exitloop
 								If SurvivorMode() Then Return
 							Next
 						EndIf
+						
 						If TimerDiff($TimerToKill) > 180000 Then Exitloop
 						If GetPartyDead() Then Exitloop
 						If SurvivorMode() Then Return
 						Agent_Attack($target)
 						$distance = GetDistance($target, -2)
-					Until Agent_GetAgentInfo($target, 'HP') < 0.005 Or $distance > $a_f_AggroRange Or TimerDiff($timer) > 20000 Or GetPartyDead() Or TimerDiff($TimerToKill) > 180000
+					Until Agent_GetAgentInfo($target, 'HP') < 0.005 Or $distance > $AggroRange Or TimerDiff($timer) > 20000 Or GetPartyDead() Or TimerDiff($TimerToKill) > 180000
 			EndIf
+
 			If GetNumberOfFoesInRangeOfAgent(-2, 1700) = 0 Then Exitloop
 			If TimerDiff($TimerToKill) > 180000 Then Exitloop
 			If GetPartyDead() Then Exitloop
@@ -361,7 +450,7 @@ Func FightExFilter($a_f_AggroRange, $filterFunc = "EnemyFilter")
 			If GetPartyDead() Then Exitloop
 			If SurvivorMode() Then Return
 			$distance = GetDistance($target, -2)
-		Until Agent_GetAgentInfo($target, 'ID') = 0 Or $distance > $a_f_AggroRange Or GetPartyDead() Or TimerDiff($TimerToKill) > 180000
+		Until Agent_GetAgentInfo($target, 'ID') = 0 Or $distance > $AggroRange Or GetPartyDead() Or TimerDiff($TimerToKill) > 180000
 
 		If CountSlots() <> 0 And Not GetPartyDead() Then
 			If TimerDiff($TimerToKill) > 180000 Then Return
@@ -1544,14 +1633,14 @@ Func CanSell($aItem)
   
 	Switch $IsPurple
 	Case True
-	   Return False ; Is purple
+	   Return Not $Purple ; Is purple
 	EndSwitch
 
 	Switch $IsPreCollectable
 	Case True
-	   Return False ; Is pre-collectable
+	   Return Not $Collector ; Is pre-collectable
 	EndSwitch
- 
+
 	Switch $IsSpecial
 	Case True
 	   Return False ; Is special item (Ecto, TOT, etc)
@@ -1641,7 +1730,7 @@ Func IsPurple($aItem)
 	Local $lRarity = Item_GetItemInfoByPtr($aItem, "Rarity")
 	
 	If $lRarity = $RARITY_Purple Then
-		Return $Purple
+		Return True
 	EndIf
 	Return False
 EndFunc ;==> IsPurple
@@ -1652,8 +1741,8 @@ Func IsPreCollectable($aItem)
 	Switch $ModelID
 	Case 2994
 	   Return True ; Red iris,
-	Case 422, 424, 426, 428 ; Collector mats
-        Return $Collector
+	Case 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433 ; Spider Leg, Charr Carving, Icy Lodes, Dull Carap, Garg Skull, Worn Belt, Unnatural Seed, Skale Fin (Pre), Skele Limb, Ench Lodes, Grawl Neck, Baked Husk.
+        Return True
 	EndSwitch
 	Return False
 EndFunc ;==> IsPreCollectable

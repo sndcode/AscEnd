@@ -19,9 +19,6 @@ Global $BeltFarmPath[3][2] = [ _
 Global $BeltFarmState
 
 Func Farm_WornBelts()
-    Cache_SkillBar()
-    Sleep(2000)
-
     While 1
         If CountSlots() < 4 Then InventoryPre()
         If Not $hasBonus Then GetBonus()
@@ -29,7 +26,10 @@ Func Farm_WornBelts()
         WornBeltsSetup()
 
         While CountSlots() > 1
-            If Not $BotRunning Then ResetStart() Return
+            If Not $BotRunning Then
+                ResetStart()
+                Return
+            EndIf
 
             WornBeltsFarm()
         WEnd
@@ -38,6 +38,7 @@ EndFunc
 
 Func WornBeltsSetup()
     Quest_ActiveQuest(0x29)
+    Sleep(250)
     $BeltFarmState = Quest_GetQuestInfo(0x29, "LogState")
 
     If $BeltFarmState = 1 Then
@@ -46,12 +47,12 @@ Func WornBeltsSetup()
         LogError("We don't have the Bandit Raid quest!")
         LogInfo("Lets get it!")
         Sleep(1000)
-        GetBeltQuest()        
+        If Not GetBeltQuest() Then Return
     ElseIf $BeltFarmState = 3 Then
         LogWarn("Bandit Raid quest is completed, lets ditch and retake it!")
         Quest_AbandonQuest(0x29)
         Sleep(1000)
-        GetBeltQuest()
+        If Not GetBeltQuest() Then Return
     EndIf
 
     If Map_GetMapID() = 164 Then
@@ -108,8 +109,6 @@ Func RunToWB($g_a_RunPath)
 EndFunc
 
 Func GetBeltQuest()
-    Map_RndTravel(148)
-
     $spawn[0] = Agent_GetAgentInfo(-2, "X")
     $spawn[1] = Agent_GetAgentInfo(-2, "Y")
     Local $sp1 = ComputeDistance(11062, 10709, $spawn[0], $spawn[1])
@@ -135,14 +134,16 @@ Func GetBeltQuest()
     Sleep(1000)
 
     Quest_ActiveQuest(0x29)
+    Sleep(250)
     $BeltFarmState = Quest_GetQuestInfo(0x29, "LogState")
 
     If $BeltFarmState = 1 Then
         LogWarn("Bandit Raid quest is active!")
+        Return True
     Else
         LogError("Cannot take quest!")
-        LogStatus("Bot will now pause.")
+        LogStatus("Bot will now pause...")
         $BotRunning = False
-        Return
+        Return False
     EndIf
 EndFunc

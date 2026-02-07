@@ -16,9 +16,6 @@ Global $IrisPath[2][3] = [ _
 ]
 
 Func Farm_RedIris()
-    Cache_SkillBar()
-    Sleep(2000)
-
     While 1
         If CountSlots() < 4 Then InventoryPre()
         If Not $hasBonus Then GetBonus()
@@ -26,7 +23,10 @@ Func Farm_RedIris()
         IrisSetup()
 
         While CountSlots() > 1
-            If Not $BotRunning Then ResetStart() Return
+            If Not $BotRunning Then
+                ResetStart()
+                Return
+            EndIf
 
             IrisFarm()
         WEnd

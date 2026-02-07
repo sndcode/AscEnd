@@ -22,9 +22,6 @@ Global $memClear = 0
 Global $HamnetState
 
 Func Farm_Hamnet()
-    Cache_SkillBar()
-    Sleep(2000)
-    
     While 1
         If CountSlots() < 4 Then InventoryPre()
         If Not $hasBonus Then GetBonus()
@@ -32,7 +29,10 @@ Func Farm_Hamnet()
         HamnetSetup()
 
         While CountSlotS() > 1
-            If Not $BotRunning Then ResetStart() Return
+            If Not $BotRunning Then
+                ResetStart()
+                Return
+            EndIf
 
             Hamnet()
         WEnd
@@ -55,6 +55,7 @@ Func HamnetSetup()
     EndIf
 
     Quest_ActiveQuest(0x4A1)
+    Sleep(250)
     $HamnetState = Quest_GetQuestInfo(0x4A1, "LogState")
 
     If $HamnetState = 1 Then
@@ -62,13 +63,13 @@ Func HamnetSetup()
     ElseIf $HamnetState = 0 Then
         LogInfo("We don't have the Hamnet quest!")
         LogWarn("Check to see when it's next available.")
-        LogStatus("Bot will now pause.")
+        LogStatus("Bot will now pause...")
         $BotRunning = False
         Return
     ElseIf $HamnetState = 3 Then
         LogInfo("Hamnet quest is completed!")
         LogError("Cannot proceed with the farm.")
-        LogStatus("Bot will now pause.")
+        LogStatus("Bot will now pause...")
         $BotRunning = False
         Return
     EndIf

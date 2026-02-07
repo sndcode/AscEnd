@@ -22,9 +22,6 @@ Global $SCPath[8][2] = [ _
 ]
 
 Func Farm_SmartCastTest()
-    Cache_SkillBar()
-    Sleep(2000)
-
     While 1
         If CountSlots() < 4 Then InventoryPre()
         If Not $hasBonus Then GetBonus()
@@ -32,7 +29,10 @@ Func Farm_SmartCastTest()
         SCSetup()
 
         While CountSlots() > 1
-            If Not $BotRunning Then ResetStart() Return
+            If Not $BotRunning Then
+                ResetStart()
+                Return
+            EndIf
 
             SCTest()
         WEnd

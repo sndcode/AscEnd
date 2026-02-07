@@ -33,9 +33,6 @@ Global $SeedsFoePath[11][2] = [ _
 ]
 
 Func Farm_UnnaturalSeeds()
-    Cache_SkillBar()
-    Sleep(2000)
-
     While 1
         If CountSlots() < 4 Then InventoryPre()
         If Not $hasBonus Then GetBonus()
@@ -43,7 +40,10 @@ Func Farm_UnnaturalSeeds()
         UnnaturalSeedSetup()
 
         While CountSlots() > 1
-            If Not $BotRunning Then ResetStart() Return
+            If Not $BotRunning Then
+                ResetStart()
+                Return
+            EndIf
 
             UnnaturalSeed()
         WEnd
@@ -119,12 +119,13 @@ EndFunc
 Func RunToSeeds($g_ai2_RunPath)
     For $i = 0 To UBound($g_ai2_RunPath, 1) - 1
         PickupLoot()
-        Sleep(1000)
+        Sleep(500)
         AggroMoveToExFilter($g_ai2_RunPath[$i][0], $g_ai2_RunPath[$i][1], 1700, "UnnaturalSeeds")
         If SurvivorMode() Then
             LogError("Survivor mode activated!")
             Return
         EndIf
+        Sleep(500)
     Next
 EndFunc
 
