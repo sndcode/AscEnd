@@ -5,7 +5,7 @@
 #include "Farm_Hamnet.au3"
 #include "Farm_RunToOutposts.au3"
 #include "Farm_WornBelts.au3"
-#include "Farm_SmartCastTest.au3"
+#include "Farm_CharrBossFarm.au3"
 
 
 
@@ -17,5 +17,5 @@ Global $g_a_Farms[8][2] = [ _
     ["Run To Outposts", "Farm_RunToOutposts"], _
     ["Unnatural Seeds", "Farm_UnnaturalSeeds"], _
     ["Worn Belts", "Farm_WornBelts"], _
-    ["Smart Cast Test", "Farm_SmartCastTest"] _
+    ["Charr Boss Farm", "Farm_CharrBossFarm"] _
 ]

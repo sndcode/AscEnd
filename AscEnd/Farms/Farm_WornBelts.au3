@@ -37,7 +37,7 @@ Func Farm_WornBelts()
 EndFunc
 
 Func WornBeltsSetup()
-    Quest_ActiveQuest(0x29)
+    QuestActive(0x29)
     Sleep(250)
     $BeltFarmState = Quest_GetQuestInfo(0x29, "LogState")
 
@@ -133,7 +133,7 @@ Func GetBeltQuest()
 
     Sleep(1000)
 
-    Quest_ActiveQuest(0x29)
+    QuestActive(0x29)
     Sleep(250)
     $BeltFarmState = Quest_GetQuestInfo(0x29, "LogState")
 

@@ -10,15 +10,16 @@
 
 #ce ----------------------------------------------------------------------------
 
-Global $HamnetPath[3][2] = [ _
-    [1709, 6516], _
-    [2425, 5497], _
-    [2646, 4491] _
+Global $HamnetPath[5][2] = [ _
+    [1925, 6315], _
+    [2431, 5106], _
+    [2577, 4177], _
+    [2714, 4172], _
+    [2190, 6405] _
 ]
 
 Global $currLevel = 0
 Global $oldLevel = 0
-Global $memClear = 0
 Global $HamnetState
 
 Func Farm_Hamnet()
@@ -54,7 +55,7 @@ Func HamnetSetup()
         WEnd
     EndIf
 
-    Quest_ActiveQuest(0x4A1)
+    QuestActive(0x4A1)
     Sleep(250)
     $HamnetState = Quest_GetQuestInfo(0x4A1, "LogState")
 
@@ -82,18 +83,13 @@ Func HamnetSetup()
     Sleep(2000)
     Map_Move(400, 7800)
     Map_WaitMapLoading(165, 0)
-    Sleep(2000)
 EndFunc
 
 Func Hamnet()
-    If $memClear >= 10 Then
-        Memory_Clear()
-        Sleep(4000)
-        $memClear = 0
-    EndIf
+    Sleep(2000)
 
     $currLevel = Agent_GetAgentInfo(-2, "Level")
-    
+
     If $_19Stop And $currLevel >= 19 Then
         LogWarn("Reached level 19, stopping the farm.")
         LogStatus("Bot will now pause.")
@@ -107,10 +103,10 @@ Func Hamnet()
         $oldLevel = $currLevel
     EndIf
 
-    Other_RndSleep(250)
+    Sleep(250)
     Map_Move(400, 7550)
     Map_WaitMapLoading(161, 1)
-    Sleep(2000)
+    Sleep(1000)
 
     $RunTime = TimerInit()
 
@@ -121,11 +117,15 @@ Func Hamnet()
         Sleep(250)
         UseSummoningStone()
         Sleep(250)
-        RunToHamnet($HamnetPath)
-        Other_RndSleep(250)
+        RunTo($HamnetPath)
+        Sleep(500)
+        AggroMoveToExFilter(2288, 5986, 4000, "BanditFilter")
+
+        If SurvivorMode() Then LogError("Survivor mode activated!")
+        
         LogInfo("Run complete. Restarting...")
         UpdateStats()
-        Other_RndSleep(250)
+        Sleep(250)
         Resign()
         Sleep(5000)
         Map_ReturnToOutpost()
@@ -145,18 +145,6 @@ Func Hamnet()
         Sleep(1000)
         LogWarn("Recovered from deadlock, restarting...")
     EndIf
-    
-    $memClear += 1
-EndFunc
-
-Func RunToHamnet($g_ai2_RunPath)
-    For $i = 0 To UBound($g_ai2_RunPath, 1) - 1
-        AggroMoveToExFilter($g_ai2_RunPath[$i][0], $g_ai2_RunPath[$i][1], 2500, "BanditFilter")
-        If SurvivorMode() Then
-            LogError("Survivor mode activated!")
-            Return
-        EndIf
-    Next
 EndFunc
 
 Func BanditFilter($aAgentPtr) ; Custom filter for bandits in pre.

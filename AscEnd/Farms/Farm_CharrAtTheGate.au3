@@ -58,7 +58,7 @@ Func CheckQuest()
 
     Sleep(2000)
 
-    Quest_ActiveQuest(0x2E)
+    QuestActive(0x2E)
     Sleep(250)
     $CharrState = Quest_GetQuestInfo(0x2E, "LogState")
 
@@ -98,7 +98,7 @@ Func CheckQuest()
         
         Sleep(1000)
 
-        Quest_ActiveQuest(0x2E)
+        QuestActive(0x2E)
         Sleep(250)
         $CharrState = Quest_GetQuestInfo(0x2E, "LogState")
 

@@ -108,6 +108,9 @@ Func MoveTo($aX, $aY, $aRandom = 50, $aFightBack = False)
 	If SurvivorMode(40) Then Return
 
 	Map_Move($lDestX, $lDestY, 0)
+	
+	; Check for healing on route
+	If NeedHeal(95) Then UseHeal()
 
 	Do
 		Sleep(100)
@@ -129,6 +132,9 @@ Func MoveTo($aX, $aY, $aRandom = 50, $aFightBack = False)
 			EndIf
 		EndIf
 
+		; Check after fightback
+		If NeedHeal(95) Then UseHeal()
+
 		If Agent_GetAgentInfo(-2, "MoveX") == 0 And Agent_GetAgentInfo(-2, "MoveY") == 0 Then
 			$lBlocked += 1
 			$lDestX = $aX + Random(-$aRandom, $aRandom)
@@ -137,6 +143,10 @@ Func MoveTo($aX, $aY, $aRandom = 50, $aFightBack = False)
 				Chat_SendChat("Stuck", "/")
 				If SurvivorMode(40) Then Return
 			EndIf
+
+			; Check for healing in case we get stuck amongst enemies
+			If NeedHeal(95) Then UseHeal()
+
 			Map_Move($lDestX, $lDestY, 0)
 			If SurvivorMode(40) Then Return
 		EndIf
@@ -187,8 +197,7 @@ EndFunc   ;==>MoveUpkeepEx
 #Region Healing
 
 ; Healing skill IDs for Pre-Searing
-Global $g_aHealingSkills[9] = [ _
-    $GC_I_SKILL_ID_ETHER_FEAST, _
+Global $g_aHealingSkills[8] = [ _
     $GC_I_SKILL_ID_HEALING_SIGNET, _
     $GC_I_SKILL_ID_ORISON_OF_HEALING, _
     $GC_I_SKILL_ID_HEALING_BREEZE, _
@@ -224,7 +233,9 @@ Func NeedHeal($Threshold = 70)
         Local $currentHP = Agent_GetAgentInfo(-2, 'CurrentHP')
         Local $maxHP = Agent_GetAgentInfo(-2, 'MaxHP')
         Local $hpPercent = Int(($currentHP / $maxHP) * 100)
-        LogWarn("HP low (" & $hpPercent & "%), need healing!")
+        If $hpPercent <= 85 Then
+			LogWarn("HP low (" & $hpPercent & "%), need healing!")
+		EndIf
         Return True
     EndIf
     Return False
@@ -265,6 +276,9 @@ Func AggroMoveToExFilter($aX, $aY, $AggroRange = 1700, $filterFunc = "EnemyFilte
     $coords[0] = Agent_GetAgentInfo(-2, 'X')
     $coords[1] = Agent_GetAgentInfo(-2, 'Y')
     
+	; Check for healing in case some grawl lobbed a brick
+	If NeedHeal(95) Then UseHeal()
+
 	If $filterFunc = "EnemyFilter" Then
 		LogWarn("Fighting enemies!")
 	Else
@@ -276,6 +290,9 @@ Func AggroMoveToExFilter($aX, $aY, $AggroRange = 1700, $filterFunc = "EnemyFilte
         Other_RndSleep(250)
         $oldCoords = $coords
         
+		; More healing checks
+		If NeedHeal(95) Then UseHeal()
+
 		; Use custom filter with FightExFilter
 		If GetNumberOfFoesInRangeOfAgent(-2, 1700, $GC_I_AGENT_TYPE_LIVING, 1, $filterFunc) > 0 Then
 			If GetPartyDead() Then ExitLoop
@@ -290,9 +307,8 @@ Func AggroMoveToExFilter($aX, $aY, $AggroRange = 1700, $filterFunc = "EnemyFilte
 
 		Other_RndSleep(250)
 		
-		If $filterFunc = "EnemyFilter" Then
-			If CountSlots() <> 0 And Not GetPartyDead() Then PickupLoot()
-		EndIf
+		; Check for healing after combat
+		If NeedHeal(95) Then UseHeal()
 
         Other_RndSleep(250)
 
@@ -590,6 +606,14 @@ Func GetNearestEnemyToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT
 	Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
 EndFunc	;==>GetNearestEnemyToAgent
 
+Func GetNearestNPCToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 1, $aCustomFilter = "NPCFilter")
+	Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
+EndFunc	;==>GetNearestNPCToAgent
+
+Func GetNearestGadgetToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_GADGET, $aReturnMode = 1)
+	Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode)
+EndFunc	;==>GetNearestGadgetToAgent
+
 Func GetNearestMantisMenderToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 1, $aCustomFilter = "MantisMenderFilter")
 	Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
 EndFunc	;==>GetNearestMantisMenderToAgent
@@ -621,10 +645,6 @@ EndFunc	;==>GetNumberOfWardenSummersInRangeOfAgent
 Func GetNumberOfWardenSeasonsInRangeOfAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 0, $aCustomFilter = "WardenSeasonFilter")
 	Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
 EndFunc	;==>GetNumberOfWardenSeasonsInRangeOfAgent
-
-Func GetNearestNPCToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 1, $aCustomFilter = "NPCFilter")
-	Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNearestNPCToAgent
 
 Func GetFilteredAgentsInRange($aRadius, $aFilterFunc = "")
     Local $lAgentArray = Agent_GetAgentArray($GC_I_AGENT_TYPE_LIVING)
@@ -1511,6 +1531,18 @@ Func DeleteBonusItems()
 	Next
 	Return False
 EndFunc   ;==>DeleteBonusItems
+
+Func QuestActive($questID)
+    Local $hasquest = Quest_GetQuestInfo($questID, "Location") <> 0 ? True : False
+
+    If $hasquest Then
+        LogInfo("Quest is in our quest log!")
+        Ui_ActiveQuest($questID)
+    Else 
+        LogInfo("Quest is not in our quest log!")
+    EndIf
+    Sleep(250)
+EndFunc   ;==>QuestActive
 
 Func PreSell($BagIndex)
     Local $aItemPtr
