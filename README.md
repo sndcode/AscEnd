@@ -24,6 +24,7 @@ AscEnd currently includes the following Pre-Searing farms:
 - **Red Iris Flower Farm**
 - **Unnatural Seeds Farm**
 - **Worn Belts Farm**
+- **Charr Boss Farm**
 - **More farms on the way**
 
 Each farm is modular and designed to plug directly into the AscEnd hub.
