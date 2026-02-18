@@ -10,10 +10,17 @@
 
 #ce ----------------------------------------------------------------------------
 
-Global $BeltFarmPath[3][2] = [ _
-    [-9110.60, -6051.47], _ 
-    [-6799.50, -2996.72], _
-    [-5846.73, -2574.55] _
+Global $BeltFarmPath[4][2] = [ _
+    [-9410, -6145], _
+    [-8250, -5525], _
+    [-7251, -4203], _
+    [-6897, -3153] _
+]
+
+Global $BeltFarmBattle[3][2] = [ _
+    [-5851, -2684], _
+    [-6124, -2085], _
+    [-6314, -1282] _
 ]
 
 Global $BeltFarmState
@@ -84,8 +91,9 @@ Func WornBeltsFarm()
 
     $RunTime = TimerInit()
 
+    RunTo($BeltFarmPath)
     UseSummoningStone()
-    RunToWB($BeltFarmPath)
+    RunToWB($BeltFarmBattle)
     Other_RndSleep(250)
     LogInfo("Worn Belts Farm complete. Restarting...")
     UpdateStats()
@@ -100,7 +108,7 @@ EndFunc
 
 Func RunToWB($g_a_RunPath)
     For $i = 0 To UBound($g_a_RunPath) - 1
-        AggroMoveToExFilter($g_a_RunPath[$i][0], $g_a_RunPath[$i][1], 2500, "BanditFilter")
+        AggroMoveSmartFilter($g_a_RunPath[$i][0], $g_a_RunPath[$i][1], 2200, 2200, $BanditFilter, True, 1800)
         If SurvivorMode() Then
             LogError("Survivor mode activated!")
             Return

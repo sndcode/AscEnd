@@ -56,7 +56,7 @@ Func HamnetSetup()
     EndIf
 
     QuestActive(0x4A1)
-    Sleep(250)
+    Sleep(750)
     $HamnetState = Quest_GetQuestInfo(0x4A1, "LogState")
 
     If $HamnetState = 1 Then
@@ -119,7 +119,7 @@ Func Hamnet()
         Sleep(250)
         RunTo($HamnetPath)
         Sleep(500)
-        AggroMoveToExFilter(2288, 5986, 4000, "BanditFilter")
+        AggroMoveSmartFilter(2288, 5986, 4000, 4000, $BanditFilter, True)
 
         If SurvivorMode() Then LogError("Survivor mode activated!")
         
@@ -145,24 +145,4 @@ Func Hamnet()
         Sleep(1000)
         LogWarn("Recovered from deadlock, restarting...")
     EndIf
-EndFunc
-
-Func BanditFilter($aAgentPtr) ; Custom filter for bandits in pre.
-
-    If Agent_GetAgentInfo($aAgentPtr, 'Allegiance') <> 3 Then Return False
-    If Agent_GetAgentInfo($aAgentPtr, 'HP') <= 0 Then Return False
-    If Agent_GetAgentInfo($aAgentPtr, 'IsDead') > 0 Then Return False
-
-    Local $ModelID = Agent_GetAgentInfo($aAgentPtr, 'PlayerNumber')
-    Local $BanditModelIDs[10] = [1346, 1420, 1421, 1422, 7824, 7825, 7839, 7840, 7857, 7858] ; Array of bandit model IDs
-    Local $IsBandit = False
-    For $i = 0 To UBound($BanditModelIDs) - 1
-        If $ModelID == $BanditModelIDs[$i] Then
-            $IsBandit = True
-            ExitLoop
-        EndIf
-    Next
-    If Not $IsBandit Then Return False
-
-    Return True
 EndFunc

@@ -162,7 +162,7 @@ EndFunc
 
 Func RunToCBF($g_a_RunPath)
     For $i = 0 To UBound($g_a_RunPath) - 1
-        AggroMoveToExFilter($g_a_RunPath[$i][0], $g_a_RunPath[$i][1], 3500, "CharrBossFilter")
+        AggroMoveSmartFilter($g_a_RunPath[$i][0], $g_a_RunPath[$i][1], 3500, $CharrFilter, True)
         
         If GetIsDead() Then
 

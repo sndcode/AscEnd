@@ -279,7 +279,7 @@ Func UnlockRanik()
 EndFunc
 
 Func UnlockFoibles()
-    If Map_IsMapUnlocked(167) Then
+    If Map_IsMapUnlocked(165) Then
         LogError("Foibles Fair is already unlocked.")
         Return True
     EndIf
@@ -301,15 +301,42 @@ Func UnlockFoibles()
     
     UpdateStats()
     Map_Move(300, 7700)
-    Map_WaitMapLoading(167, 0)
+    Map_WaitMapLoading(165, 0)
     Sleep(1000)
     
-    If Map_GetMapID() = 167 Then
+    If Map_GetMapID() = 165 Then
         LogWarn("Foibles Fair unlocked.")
         Return True
     EndIf
     
     Return False
+EndFunc
+
+Func ExitAscalon()
+    MoveTo(7630, 5544)
+    Map_Move(6985, 4939)
+    Map_WaitMapLoading(146, 1)
+    Sleep(1000)
+EndFunc
+
+Func ExitAshford()
+    $spawn[0] = Agent_GetAgentInfo(-2, "X")
+    $spawn[1] = Agent_GetAgentInfo(-2, "Y")
+    Local $sp1 = ComputeDistance(-12342.00, -6538.00, $spawn[0], $spawn[1])
+
+    Select
+        Case ($sp1 <= 1200) Or ($sp1 >= 1800)
+            LogInfo("What a lovely day to pick some flowers.")
+            MoveTo(-11457.08, -6238.37)
+        Case $sp1 > 1200 And $sp1 < 1800
+            LogInfo("Mhenlo's smiling, Meerak's humming, and I'm picking red irises..")
+            MoveTo(-12536.56, -6758.55)
+            MoveTo(-11457.08, -6238.37)
+    EndSelect
+        
+    Map_Move(-11089, -6250)
+    Map_WaitMapLoading(146, 1)
+    Sleep(2000)
 EndFunc
 
 Func RunToMove($g_ai2_RunPath)

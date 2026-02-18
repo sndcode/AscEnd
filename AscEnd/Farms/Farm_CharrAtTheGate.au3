@@ -59,7 +59,7 @@ Func CheckQuest()
     Sleep(2000)
 
     QuestActive(0x2E)
-    Sleep(250)
+    Sleep(750)
     $CharrState = Quest_GetQuestInfo(0x2E, "LogState")
 
     If $CharrState = 1 Then
@@ -99,7 +99,7 @@ Func CheckQuest()
         Sleep(1000)
 
         QuestActive(0x2E)
-        Sleep(250)
+        Sleep(750)
         $CharrState = Quest_GetQuestInfo(0x2E, "LogState")
 
         If $CharrState = 1 Then
@@ -115,13 +115,6 @@ Func CheckQuest()
         MoveTo(7921, 6497)
         LogInfo("Heading out to say furr-well to the charr!")
     EndIf
-EndFunc
-
-Func ExitAscalon()
-    MoveTo(7630, 5544)
-    Map_Move(6985, 4939)
-    Map_WaitMapLoading(146, 1)
-    Sleep(1000)
 EndFunc
 
 Func CharrAtGate()

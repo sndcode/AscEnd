@@ -18,7 +18,7 @@ Global $SeedsPath[5][2] = [ _
     [18979, 342] _
 ]
 
-Global $SeedsFoePath[11][2] = [ _
+Global $SeedsFoePath[12][2] = [ _
     [18459, -1404], _
     [18117, -2672], _
     [17253, -3751], _
@@ -29,7 +29,8 @@ Global $SeedsFoePath[11][2] = [ _
     [16992, -10330], _
     [17488, -11398], _
     [18616, -12186], _
-    [20373, -12225] _
+    [20373, -12225], _
+    [21225, -11664] _
 ]
 
 Func Farm_UnnaturalSeeds()
@@ -118,33 +119,11 @@ EndFunc
 
 Func RunToSeeds($g_ai2_RunPath)
     For $i = 0 To UBound($g_ai2_RunPath, 1) - 1
-        PickupLoot()
-        Sleep(500)
-        AggroMoveToExFilter($g_ai2_RunPath[$i][0], $g_ai2_RunPath[$i][1], 1700, "UnnaturalSeeds")
+        AggroMoveSmartFilter($g_ai2_RunPath[$i][0], $g_ai2_RunPath[$i][1], 1200, 1200, $SpiderAloeFilter, True, 1000)
         If SurvivorMode() Then
             LogError("Survivor mode activated!")
             Return
         EndIf
         Sleep(500)
     Next
-EndFunc
-
-Func UnnaturalSeeds($aAgentPtr)
-
-    If Agent_GetAgentInfo($aAgentPtr, 'Allegiance') <> 3 Then Return False
-    If Agent_GetAgentInfo($aAgentPtr, 'HP') <= 0 Then Return False
-    If Agent_GetAgentInfo($aAgentPtr, 'IsDead') > 0 Then Return False
-
-    Local $ModelID = Agent_GetAgentInfo($aAgentPtr, 'PlayerNumber')
-    Local $SpiderAloeIDs[6] = [1401, 1403, 1426, 1428, 1429]
-    Local $IsSpiderAloe = False
-    For $i = 0 To UBound($SpiderAloeIDs) - 1
-        If $ModelID == $SpiderAloeIDs[$i] Then
-            $IsSpiderAloe = True
-            ExitLoop
-        EndIf
-    Next
-    If Not $IsSpiderAloe Then Return False
-
-    Return True
 EndFunc

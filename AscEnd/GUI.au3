@@ -333,6 +333,7 @@ Func ResetStart()
     GUICtrlSetState($GUI_CB19Stop, $GUI_ENABLE)
     GUICtrlSetData($GUIStartButton, "Start")
     $CharrBossPickup = True
+    $hasBonus = False
     LogStatus("Bot paused.")
     Sleep(500)
 EndFunc
