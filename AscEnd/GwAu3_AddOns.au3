@@ -623,7 +623,7 @@ Func CharrFilter($aAgentPtr)
     If Agent_GetAgentInfo($aAgentPtr, 'IsDead') > 0 Then Return False
 
     Local $ModelID = Agent_GetAgentInfo($aAgentPtr, 'PlayerNumber')
-    Local $CharrModelIDs[6] = [1640, 1643, 1648, 1652, 1658, 1662, 1453, 1450, 1451, 1656, 1638] ; Array of Charr model IDs
+    Local $CharrModelIDs[11] = [1640, 1643, 1648, 1652, 1658, 1662, 1453, 1450, 1451, 1656, 1638] ; Array of Charr model IDs
     Local $IsCharr = False
     For $i = 0 To UBound($CharrModelIDs) - 1
         If $ModelID == $CharrModelIDs[$i] Then
