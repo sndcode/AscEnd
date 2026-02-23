@@ -230,15 +230,17 @@ EndFunc
 
 ; Check if HP is below threshold percentage
 Func NeedHeal($Threshold = 70)
-    If Agent_GetAgentInfo(-2, 'CurrentHP') <= Agent_GetAgentInfo(-2, 'MaxHP') * ($Threshold / 100) Then
-        Local $currentHP = Agent_GetAgentInfo(-2, 'CurrentHP')
-        Local $maxHP = Agent_GetAgentInfo(-2, 'MaxHP')
-        Local $hpPercent = Int(($currentHP / $maxHP) * 100)
-        If $hpPercent <= 50 Then
-			LogWarn("HP low (" & $hpPercent & "%), need urgent healing!")
+    If Map_GetInstanceInfo("IsExplorable") Then
+		If Agent_GetAgentInfo(-2, 'CurrentHP') <= Agent_GetAgentInfo(-2, 'MaxHP') * ($Threshold / 100) Then
+			Local $currentHP = Agent_GetAgentInfo(-2, 'CurrentHP')
+			Local $maxHP = Agent_GetAgentInfo(-2, 'MaxHP')
+			Local $hpPercent = Int(($currentHP / $maxHP) * 100)
+			If $hpPercent <= 50 Then
+				LogWarn("HP low (" & $hpPercent & "%), need urgent healing!")
+			EndIf
+			Return True
 		EndIf
-        Return True
-    EndIf
+	EndIf
     Return False
 EndFunc
 

@@ -15,7 +15,7 @@ Global $HamnetPath[5][2] = [ _
     [2431, 5106], _
     [2577, 4177], _
     [2714, 4172], _
-    [2190, 6405] _
+    [2360, 6003] _
 ]
 
 Global $currLevel = 0
@@ -113,13 +113,13 @@ Func Hamnet()
     Local $lDeadlock = TimerInit()
 
     While TimerDiff($lDeadlock) < 300000 ; 5 minute deadlock
+        Sleep(250)
+        RunTo($HamnetPath)
         LogInfo("Got imps? ")
         Sleep(250)
         UseSummoningStone()
         Sleep(250)
-        RunTo($HamnetPath)
-        Sleep(500)
-        AggroMoveSmartFilter(2288, 5986, 4000, 4000, $BanditFilter, True)
+        AggroMoveSmartFilter(2574, 5885, 2200, 2200, $BanditFilter, True)
 
         If SurvivorMode() Then LogError("Survivor mode activated!")
         

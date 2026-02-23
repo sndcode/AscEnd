@@ -339,6 +339,13 @@ Func ExitAshford()
     Sleep(2000)
 EndFunc
 
+Func ExitBarradin()
+    MoveTo(-7088, 1427)
+    Map_Move(-7531, 1421)
+    Map_WaitMapLoading(160, 1)
+    Sleep(1000)
+EndFunc
+
 Func RunToMove($g_ai2_RunPath)
     For $i = 0 To UBound($g_ai2_RunPath, 1) - 1
         MoveTo($g_ai2_RunPath[$i][0], $g_ai2_RunPath[$i][1])
