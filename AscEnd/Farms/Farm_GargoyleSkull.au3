@@ -33,6 +33,16 @@ Global $GargPath3[4][2] = [ _ ; Reset coords
     [-11297, 16216] _
 ]
 
+Global $aGargPhrases[5] = [ _ ; Let's liven up a very mundane slow farm
+    "The gargoyle lunges. You introduce it to the floor. Permanently.", _
+    "Ugly bastard. At least it died doing what it loved, being in the way.", _
+    "You've killed so many of these things down here you're starting to feel bad for the stone. Almost.", _
+    "Another gruesome nightmare put out of its misery. The catacombs smell worse than it did.", _
+    "It took three swings and your last shred of patience, but the gargoyle won't be anyone's problem anymore." _
+]
+
+Global $GargPhrase = 0
+
 Func Farm_GargoyleSkull()
     While 1
         If CountSlots() < 4 Then InventoryPre()
@@ -85,9 +95,12 @@ Func GargoyleSkull()
     
     $RunTime = TimerInit()
 
-    RunTo($GargPath2)
-    UseSummoningStone()
+    LogInfo("Can you hear that Mr Gargoyle? That's the sound of inevitability...")
 
+    RunTo($GargPath2)
+
+    UseSummoningStone()
+    GargoyleKillPhrase()
     AggroMoveSmartFilter(-6655, 15657, 2000, 2000)
 
     If SurvivorMode() Then
@@ -103,4 +116,9 @@ Func GargoyleSkull()
     Map_Move(-4000, 9560)
     Map_WaitMapLoading(160, 1)
     Sleep(2000)
+EndFunc
+
+Func GargoyleKillPhrase()
+    LogInfo($aGargPhrases[$GargPhrase])
+    $GargPhrase = Mod($GargPhrase + 1, UBound($aGargPhrases))
 EndFunc
