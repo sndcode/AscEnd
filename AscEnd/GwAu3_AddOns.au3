@@ -32,7 +32,7 @@ Func CalculateAverageTime()
     Local $averagetime
     Local $timesum = 0
 
-    for $i = 1 To UBound($AvgTime)
+    For $i = 1 To UBound($AvgTime)
         $timesum += $AvgTime[$i-1]
     Next
 
@@ -46,7 +46,7 @@ Func CalculateFastestTime()
     Local $fastesttime
     Local $currtime
 
-    for $i = 1 To UBound($AvgTime)
+    For $i = 1 To UBound($AvgTime)
         $currtime = $AvgTime[$i-1]
         If $i = 1 Then
             $fastesttime = $currtime
@@ -109,7 +109,7 @@ Func MoveTo($aX, $aY, $aRandom = 50, $aFightBack = False)
 
     Map_Move($lDestX, $lDestY, 0)
 
-	; Check for healing on route
+    ; Check for healing on route
     If NeedHeal(95) Then UseHeal()
 
     Do
@@ -642,7 +642,7 @@ Func GetPartyDead()
 
     ; If all area dead, return True
     Return True
-EndFunc ;==> GetPartyDead
+EndFunc   ;==> GetPartyDead
 
 Func SurvivorMode($Threshold = 65)
     If $Survivor = True Then
@@ -651,7 +651,7 @@ Func SurvivorMode($Threshold = 65)
         EndIf
     EndIf
     Return False
-EndFunc ;==> SurvivorMode
+EndFunc   ;==> SurvivorMode
 
 Func CacheHeroesWithRez()
     ; Go over all heroes and find all Heroes with rez skills
@@ -661,7 +661,7 @@ Func CacheHeroesWithRez()
             $heroNumberWithRez[UBound($heroNumberWithRez)-1] = $i
         EndIf
     Next
-EndFunc ;==> CacheHeroesWithRez
+EndFunc   ;==> CacheHeroesWithRez
 
 Func GetPartyDefeated()
     ; Party is defeated, when you die, while Malus is at 60%
@@ -696,7 +696,7 @@ Func EnemyFilter($aAgentPtr)
     If Agent_GetAgentInfo($aAgentPtr, 'IsDead') > 0 Then Return False
 
     Return True
-EndFunc	;==>EnemyFilter
+EndFunc   ;==>EnemyFilter
 
 Func CharrFilter($aAgentPtr)
 
@@ -766,7 +766,7 @@ Func MantisMenderFilter($aAgentPtr)
     If Agent_GetAgentInfo($aAgentPtr, 'PlayerNumber') <> $MantisMender Then Return False
 
     Return True
-EndFunc	;==>MantisMenderFilter
+EndFunc   ;==>MantisMenderFilter
 
 Func WardenSummerFilter($aAgentPtr)
 
@@ -776,7 +776,7 @@ Func WardenSummerFilter($aAgentPtr)
     If Agent_GetAgentInfo($aAgentPtr, 'PlayerNumber') <> $WardenSummer Then Return False
 
     Return True
-EndFunc	;==>WardenSummerFilter
+EndFunc   ;==>WardenSummerFilter
 
 Func WardenSeasonFilter($aAgentPtr)
 
@@ -786,7 +786,7 @@ Func WardenSeasonFilter($aAgentPtr)
     If Agent_GetAgentInfo($aAgentPtr, 'PlayerNumber') <> $WardenSeason Then Return False
 
     Return True
-EndFunc	;==>WardenSeasonFilter
+EndFunc   ;==>WardenSeasonFilter
 
 Func NPCFilter($aAgentPtr)
 
@@ -795,53 +795,53 @@ Func NPCFilter($aAgentPtr)
     If Agent_GetAgentInfo($aAgentPtr, 'IsDead') > 0 Then Return False
 
     Return True
-EndFunc	;==>NPCFilter
+EndFunc   ;==>NPCFilter
 #EndRegion
 
 #Region Agents
 Func GetNearestEnemyToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 1, $aCustomFilter = "EnemyFilter")
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNearestEnemyToAgent
+EndFunc   ;==>GetNearestEnemyToAgent
 
 Func GetNearestNPCToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 1, $aCustomFilter = "NPCFilter")
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNearestNPCToAgent
+EndFunc   ;==>GetNearestNPCToAgent
 
 Func GetNearestGadgetToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_GADGET, $aReturnMode = 1)
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode)
-EndFunc	;==>GetNearestGadgetToAgent
+EndFunc   ;==>GetNearestGadgetToAgent
 
 Func GetNearestMantisMenderToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 1, $aCustomFilter = "MantisMenderFilter")
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNearestMantisMenderToAgent
+EndFunc   ;==>GetNearestMantisMenderToAgent
 
 Func GetNearestWardenSummerToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 1, $aCustomFilter = "WardenSummerFilter")
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNearestWardenSummerToAgent
+EndFunc   ;==>GetNearestWardenSummerToAgent
 
 Func GetNearestWardenSeasonToAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 1, $aCustomFilter = "WardenSeasonFilter")
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNearestWardenSeasonToAgent
+EndFunc   ;==>GetNearestWardenSeasonToAgent
 
 Func GetNumberOfFoesInRangeOfAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 0, $aCustomFilter = "EnemyFilter")
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNumberOfFoesInRangeOfAgent
+EndFunc   ;==>GetNumberOfFoesInRangeOfAgent
 
 Func GetNumberOfCharrInRangeOfAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 0, $aCustomFilter = "CharrFilter")
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNumberOfCharrInRangeOfAgent
+EndFunc   ;==>GetNumberOfCharrInRangeOfAgent
 
 Func GetNumberOfMantisMendersInRangeOfAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 0, $aCustomFilter = "MantisMenderFilter")
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNumberOfMantisMendersInRangeOfAgent
+EndFunc   ;==>GetNumberOfMantisMendersInRangeOfAgent
 
 Func GetNumberOfWardenSummersInRangeOfAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 0, $aCustomFilter = "WardenSummerFilter")
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNumberOfWardenSummersInRangeOfAgent
+EndFunc   ;==>GetNumberOfWardenSummersInRangeOfAgent
 
 Func GetNumberOfWardenSeasonsInRangeOfAgent($aAgentID = -2, $aRange = 1320, $aType = $GC_I_AGENT_TYPE_LIVING, $aReturnMode = 0, $aCustomFilter = "WardenSeasonFilter")
     Return GetAgents($aAgentID, $aRange, $aType, $aReturnMode, $aCustomFilter)
-EndFunc	;==>GetNumberOfWardenSeasonsInRangeOfAgent
+EndFunc   ;==>GetNumberOfWardenSeasonsInRangeOfAgent
 
 Func GetFilteredAgentsInRange($aRadius, $aFilterFunc = "")
     Local $lAgentArray = Agent_GetAgentArray($GC_I_AGENT_TYPE_LIVING)
@@ -940,7 +940,7 @@ Func HasRezSkill($a_i_HeroNumber)
         Next
     Next
     Return False
-EndFunc ;==> HasRezSkill
+EndFunc   ;==>HasRezSkill
 #EndRegion
 
 #Region Inventory
@@ -952,7 +952,7 @@ Func CountSlots()
         $temp += Item_GetBagInfo($bag,"EmptySlots")
     Next
     Return $temp
-EndFunc ; Counts open slots in your Inventory
+EndFunc   ;==>CountSlots
 
 ; Returns the total quantity of items with the given ModelID in bags 1-4
 Func GetItemCountByModelID($targetModelID)
@@ -1124,7 +1124,7 @@ Func GetItemMaxDmg($aItem)
     If $lPos = 0 Then $lPos = StringInStr($lModString, "B8A7") ; Armor (shield)
     If $lPos = 0 Then Return 0
     Return Int("0x" & StringMid($lModString, $lPos - 2, 2))
- EndFunc	;==> GetItemMaxDmg
+ EndFunc   ;==>GetItemMaxDmg
 
 Func GetGoldCharacter()
     Return Item_GetInventoryInfo("GoldCharacter")
@@ -1177,7 +1177,7 @@ Func InventoryPre()
     
     LogWarn("Inventory management complete!")
     Sleep(500)
-EndFunc ;==> InventoryPre
+EndFunc   ;==>InventoryPre
 
 Func Inventory()
 
@@ -1246,7 +1246,7 @@ Func Inventory()
     EndIf
 
     Sleep(3000)
-EndFunc ;==> Inventory
+EndFunc   ;==>Inventory
 
 Func Merchant()
     ;~ Array with Coordinates for Merchants (you better check those for your own Guildhall)
@@ -1291,7 +1291,7 @@ Func Merchant()
     MoveTo(Agent_GetAgentInfo($guy, "X")-20,Agent_GetAgentInfo($guy, "Y")-20)
     Agent_GoNPC($guy)
     Sleep(1000)
-EndFunc ;==> Merchant
+EndFunc   ;==> Merchant
 
 Func MerchantAscalonPre()
     Local $spX = Agent_GetAgentInfo(-2, "X")
@@ -1307,7 +1307,7 @@ Func MerchantAscalonPre()
     MoveTo(Agent_GetAgentInfo($guy, "X"), Agent_GetAgentInfo($guy, "Y"), 20)
     Agent_GoNPC($guy)
     Sleep(1000)
-EndFunc ;==> MerchantAscalonPre
+EndFunc   ;==> MerchantAscalonPre
 
 Func MerchantEotN()
     ; Run to Merchant in EotN
@@ -1319,7 +1319,7 @@ Func MerchantEotN()
     MoveTo(Agent_GetAgentInfo($guy, "X")-20,Agent_GetAgentInfo($guy, "Y")-20)
     Agent_GoNPC($guy)
     Sleep(1000)
-EndFunc ;==> MerchantEotN
+EndFunc   ;==> MerchantEotN
 
 Func RareMaterialTrader()
     ;~ Array with Coordinates for Merchants (you better check those for your own Guildhall)
@@ -1382,7 +1382,7 @@ Func RareMaterialTrader()
             Sleep(1000)
         EndIf
     WEnd
-EndFunc	;==>Rare Material trader
+EndFunc   ;==>Rare Material trader
 
 Func RareMaterialTraderEotN()
     LogInfo("Run to Rare Material Trader in EotN")
@@ -1407,7 +1407,7 @@ Func RareMaterialTraderEotN()
             Sleep(1000)
         EndIf
     WEnd
-EndFunc	;==> RareMaterialTraderEotN
+EndFunc   ;==> RareMaterialTraderEotN
 
 Func RuneTrader()
     MoveTo(1297.07,11389.97)
@@ -1417,7 +1417,7 @@ Func RuneTrader()
     MoveTo(Agent_GetAgentInfo($guy, "X")-20,Agent_GetAgentInfo($guy, "Y")-20)
     Agent_GoNPC($guy)
     Sleep(1000)
-EndFunc	;==> Rune Trader
+EndFunc   ;==> Rune Trader
 
 Func RuneTraderEotN()
     LogInfo("Run to Rune Trader in EotN")
@@ -1428,7 +1428,7 @@ Func RuneTraderEotN()
     MoveTo(Agent_GetAgentInfo($guy, "X")-20,Agent_GetAgentInfo($guy, "Y")-20)
     Agent_GoNPC($guy)
     Sleep(1000)
-EndFunc	;==> RuneTraderEotN
+EndFunc   ;==> RuneTraderEotN
 
 Func Ident($BagIndex)
     Local $BagPtr
@@ -1458,7 +1458,7 @@ Func Ident($BagIndex)
         ;IdentifyItem2($aItemPtr, FindIdentificationKit())
         Sleep(250)
     Next
-EndFunc ;==>Ident
+EndFunc   ;==>Ident
 
 Func Salvage($BagIndex)
     Local $BagPtr
@@ -1504,7 +1504,7 @@ Func Salvage($BagIndex)
             EndIf
         EndIf
     Next
-EndFunc ;==>Salvage
+EndFunc   ;==>Salvage
 
 Func IsAlreadySalvaged($aItemPtr)
     Local $modelID
@@ -1567,7 +1567,7 @@ Func IsAlreadySalvaged($aItemPtr)
     EndSwitch
 
     Return False
-EndFunc	;==> IsAlreadySalvaged
+EndFunc   ;==> IsAlreadySalvaged
 
 ;~ Description: Starts a salvaging session of an item.
 Func StartSalvage2($aItem, $aSalvageKit = 0)
@@ -1721,7 +1721,7 @@ Func UseConset()
         Next
     Next
     Return
-EndFunc	   ;==>UseConset
+EndFunc   ;==>UseConset
 
 Func FindSummoningStone()
     Local $lItemPtr
@@ -1830,7 +1830,7 @@ Func PreSell($BagIndex)
         Sleep(250)
         If GetGoldCharacter() >= 100 Then Return
     Next
-EndFunc ;==> PreSell
+EndFunc   ;==> PreSell
 
 Func Sell($BagIndex)
     Local $aItemPtr
@@ -1845,7 +1845,7 @@ Func Sell($BagIndex)
         EndIf
         Sleep(250)
     Next
-EndFunc ;==> Sell
+EndFunc   ;==> Sell
 
 Func ScanDyes($dyeID)
     Local $aItemPtr
@@ -1870,7 +1870,7 @@ Func ScanDyes($dyeID)
         Next
     Next
     Return $dyeNumber
-EndFunc ;==> ScanDyes
+EndFunc   ;==> ScanDyes
 
 
 Func SellRunes($BagIndex)
@@ -1898,7 +1898,7 @@ Func SellRunes($BagIndex)
         EndIf
         Sleep(500)
     Next
-EndFunc ;==> SellRunes
+EndFunc   ;==> SellRunes
 
 Func CanPreSell($aItemPtr)
     Local $lRarity = Item_GetItemInfoByPtr($aItemPtr, "Rarity")
@@ -1908,7 +1908,7 @@ Func CanPreSell($aItemPtr)
     If $lRarity <> $RARITY_White And $lRarity <> $RARITY_Blue Then Return False
 
     Return True
-EndFunc ;==> CanPreSell
+EndFunc   ;==> CanPreSell
 
 Func CanSell($aItem)
     Local $IsPurple = IsPurple($aItem)
@@ -2023,7 +2023,7 @@ Func CanSell($aItem)
     EndSwitch
  
     Return True
-  EndFunc ;==> CanSell
+  EndFunc   ;==> CanSell
 #EndRegion
 
 #Region Items
@@ -2034,7 +2034,7 @@ Func IsPurple($aItem)
         Return True
     EndIf
     Return False
-EndFunc ;==> IsPurple
+EndFunc   ;==> IsPurple
 
 Func IsPreCollectable($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2046,7 +2046,7 @@ Func IsPreCollectable($aItem)
         Return True
     EndSwitch
     Return False
-EndFunc ;==> IsPreCollectable
+EndFunc   ;==> IsPreCollectable
 
 Func IsBonusJunk($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2056,7 +2056,7 @@ Func IsBonusJunk($aItem)
     Next
 
     Return False
-EndFunc
+EndFunc   ;==> IsBonusJunk
 
 Func IsRareSkin($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2217,7 +2217,7 @@ Func IsRareSkin($aItem)
         Return True ; Zodiac Sword
     EndSwitch
     Return False
-EndFunc ;==> IsRareSkin 
+EndFunc   ;==> IsRareSkin 
 
 Func IsTyriaAnniSkin($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2235,7 +2235,7 @@ Func IsTyriaAnniSkin($aItem)
         Return True ; Ithas Bow
     EndSwitch
     Return False
-EndFunc ;==> IsTyriaAnniSkin
+EndFunc   ;==> IsTyriaAnniSkin
 
 Func IsCanthaAnniSkin($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2249,7 +2249,7 @@ Func IsCanthaAnniSkin($aItem)
         Return True ; Japan 1st Anniversary Shield
     EndSwitch
     Return False
-EndFunc ;==> IsCanthaAnniSkin
+EndFunc   ;==> IsCanthaAnniSkin
 
 Func IsElonaAnniSkin($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2259,7 +2259,7 @@ Func IsElonaAnniSkin($aItem)
        Return True ; Sunspear
     EndSwitch
     Return False
-EndFunc ;==> IsElonaAnniSkin
+EndFunc   ;==> IsElonaAnniSkin
 
 Func IsEotnAnniSkin($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2283,7 +2283,7 @@ Func IsEotnAnniSkin($aItem)
         Return True ; Stoneblade
     EndSwitch
     Return False
-EndFunc ;==> IsEotnAnniSkin
+EndFunc   ;==> IsEotnAnniSkin
 
 Func IsAnyCampAnniSkin($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2333,7 +2333,7 @@ Func IsAnyCampAnniSkin($aItem)
         Return True ; Omnious Aegis
     EndSwitch
     Return False
-EndFunc ;==> IsAnyCampAnniSkin
+EndFunc   ;==> IsAnyCampAnniSkin
 
 Func IsPcon($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2351,7 +2351,7 @@ Func IsPcon($aItem)
        Return True ; Tonic
     EndSwitch
     Return False
-EndFunc ;==> IsPcon
+EndFunc   ;==> IsPcon
 
 Func IsRareMaterial($aItem)
     Local $M = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2363,7 +2363,7 @@ Func IsRareMaterial($aItem)
        Return True ; Rare Mats
     EndSwitch
     Return False
-EndFunc ;==> IsRareMaterial
+EndFunc   ;==> IsRareMaterial
 
 Func IsSpecialItem($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -2394,7 +2394,7 @@ Func IsSpecialItem($aItem)
         Return True ; Djinn Essences
     EndSwitch
     Return False
-EndFunc	;==> IsSpecialItem
+EndFunc   ;==> IsSpecialItem
 
 Func IsPerfectCaster($aItem)
     Local $ModStruct = Item_GetModStruct($aItem)
@@ -2803,7 +2803,7 @@ Func IsPerfectCaster($aItem)
        Return False
     EndSwitch
     Return False
-EndFunc ;==> IsPerfectCaster
+EndFunc   ;==> IsPerfectCaster
 
 Func IsPerfectStaff($aItem)
     Local $ModStruct = Item_GetModStruct($aItem)
@@ -2957,7 +2957,7 @@ Func IsPerfectStaff($aItem)
        EndIf
     EndSwitch
     Return False
-EndFunc ;==> IsPerfectStaff
+EndFunc   ;==> IsPerfectStaff
 
 Func IsPerfectShield($aItem)
     Local $ModStruct = Item_GetModStruct($aItem)
@@ -3054,7 +3054,7 @@ Func IsPerfectShield($aItem)
        EndIf
     EndIf
     Return False
-EndFunc ;==> IsPerfectShield
+EndFunc   ;==> IsPerfectShield
 
 Func IsRareRune($aItem)
     Local $ModStruct = Item_GetModStruct($aItem)
@@ -3097,7 +3097,7 @@ Func IsRareRune($aItem)
     Else
        Return False
     EndIf
-EndFunc ;==> IsRareRune
+EndFunc   ;==> IsRareRune
 
 Func IsSellableRune($aItem)
     Local $ModStruct = Item_GetModStruct($aItem)
@@ -3140,7 +3140,7 @@ Func IsSellableRune($aItem)
     Else
        Return False
     EndIf
-EndFunc ;==> IsSellableRune
+EndFunc   ;==> IsSellableRune
 
 Func IsSupVigor($aItem)
     Local $ModStruct = Item_GetModStruct($aItem)
@@ -3151,7 +3151,7 @@ Func IsSupVigor($aItem)
     Else
        Return False
     EndIf
-EndFunc ;==> IsSupVigor
+EndFunc   ;==> IsSupVigor
 
 
 Func IsRareInsignia($aItem)
@@ -3170,7 +3170,7 @@ Func IsRareInsignia($aItem)
     Else
        Return False
     EndIf
-EndFunc ;==> IsRareInsignia
+EndFunc   ;==> IsRareInsignia
 
 Func IsSellableInsignia($aItem)
     Local $ModStruct = Item_GetModStruct($aItem)
@@ -3188,7 +3188,7 @@ Func IsSellableInsignia($aItem)
     Else
        Return False
     EndIf
-EndFunc ;==> IsSellableInsignia
+EndFunc   ;==> IsSellableInsignia
 
 Func IsReq8Max($aItem)
     Local $Type = Item_GetItemInfoByPtr($aItem, "ItemType")
@@ -3263,7 +3263,7 @@ Func IsReq8Max($aItem)
        EndSwitch
     EndSwitch
     Return False
-EndFunc ;==> IsReq8Max
+EndFunc   ;==> IsReq8Max
 
 Func IsReq7Max($aItem)
     Local $Type = Item_GetItemInfoByPtr($aItem, "ItemType")
@@ -3338,7 +3338,7 @@ Func IsReq7Max($aItem)
        EndSwitch
     EndSwitch
     Return False
-EndFunc ;==> IsReq7Max
+EndFunc   ;==> IsReq7Max
 
 Func GetItemMaxReq8($aItem)
     Local $Type = Item_GetItemInfoByPtr($aItem, "ItemType")
@@ -3365,7 +3365,7 @@ Func GetItemMaxReq8($aItem)
           Return False
        EndIf
     EndSwitch
-EndFunc ;==> GetItemMaxReq8
+EndFunc   ;==> GetItemMaxReq8
 
 Func GetItemMaxReq7($aItem)
     Local $Type = Item_GetItemInfoByPtr($aItem, "ItemType")
@@ -3392,7 +3392,7 @@ Func GetItemMaxReq7($aItem)
           Return False
        EndIf
     EndSwitch
-EndFunc ;==> GetItemMaxReq7
+EndFunc   ;==> GetItemMaxReq7
 
 Func IsRegularTome($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -3402,7 +3402,7 @@ Func IsRegularTome($aItem)
        Return True
     EndSwitch
     Return False
-EndFunc ;==> IsRegularTome
+EndFunc   ;==> IsRegularTome
 
 Func IsEliteTome($aItem)
     Local $ModelID = Item_GetItemInfoByPtr($aItem, "ModelID")
@@ -3412,18 +3412,18 @@ Func IsEliteTome($aItem)
        Return True ; All Elite Tomes
     EndSwitch
     Return False
-EndFunc ;==> IsEliteTome
+EndFunc   ;==> IsEliteTome
 
 Func IsFiveE($aItem)
     Local $ModStruct = Item_GetModStruct($aItem)
     Local $t = Item_GetItemInfoByPtr($aItem, "ItemType")
     If (IsIHaveThePower($ModStruct) And $t = 2) Then Return True	; (Nur für Äxte)
-EndFunc	;==> IsFiveE
+EndFunc   ;==> IsFiveE
 
 Func IsIHaveThePower($ModStruct)
     Local $EnergyAlways5 = StringInStr($ModStruct, "0500D822", 0 ,1) ; Energy +5
     If $EnergyAlways5 > 0 Then Return True
-EndFunc ;==> IsIHaveThePower
+EndFunc   ;==> IsIHaveThePower
 
 Func IsMaxAxe($aItem)
     Local $Type = Item_GetItemInfoByPtr($aItem, "ItemType")
@@ -3435,7 +3435,7 @@ Func IsMaxAxe($aItem)
     Else
         Return False
     EndIf
-EndFunc ;==> IsMaxAxe
+EndFunc   ;==> IsMaxAxe
 
 Func IsMaxDagger($aItem)
     Local $Type = Item_GetItemInfoByPtr($aItem, "ItemType")
@@ -3447,7 +3447,7 @@ Func IsMaxDagger($aItem)
     Else
         Return False
     EndIf
-EndFunc ;==> IsMaxDagger
+EndFunc   ;==> IsMaxDagger
 
 #EndRegion
 
@@ -3524,24 +3524,24 @@ Func CheckGuildHall()
         $IsleOfSolitude = True
         LogInfo("Isle of Solitude")
     EndIf
-EndFunc ;~ Check Guild halls
+EndFunc   ;~ Check Guild halls
 
 
 #Region Luxon and Kurzick Points
 Func GetKurzickFaction()
     Local $currentKurzFaction = World_GetWorldInfo("CurrentKurzick")
     Return $currentKurzFaction
-EndFunc ;==> GetKurzickPoints
+EndFunc   ;==> GetKurzickPoints
 
 Func GetMaxKurzickFaction()
     Local $maxKurzFaction = World_GetWorldInfo("MaxKurzickPoints")
     Return $maxKurzFaction
-EndFunc ;==> GetMaxKurzickPoints
+EndFunc   ;==> GetMaxKurzickPoints
 
 Func GetKurzickTitlePoints()
     Local $currentKurzPoints = Title_GetTitleInfo($GC_E_TITLEID_KURZICK, "CurrentPoints")
     Return $currentKurzPoints
-EndFunc ;==> GetKurzickTitlePoints
+EndFunc   ;==> GetKurzickTitlePoints
 
 Func GetKurzickTitle()
     Local $currentKurzPoints = Title_GetTitleInfo($GC_E_TITLEID_KURZICK, "CurrentPoints")
@@ -3573,22 +3573,22 @@ Func GetKurzickTitle()
     Else
         Return 12
     EndIf
-EndFunc ;==> GetKurzickTitle
+EndFunc   ;==> GetKurzickTitle
 
 Func GetLuxonFaction()
     Local $currentLuxFaction = World_GetWorldInfo("CurrentLuxon")
     Return $currentLuxFaction
-EndFunc ;==> GetLuxonPoints
+EndFunc   ;==> GetLuxonPoints
 
 Func GetMaxLuxonFaction()
     Local $maxLuxFaction = World_GetWorldInfo("MaxLuxonPoints")
     Return $maxLuxFaction
-EndFunc ;==> GetMaxLuxonPoints
+EndFunc   ;==> GetMaxLuxonPoints
 
 Func GetLuxonTitlePoints()
     Local $currentLuxonPoints = Title_GetTitleInfo($GC_E_TITLEID_LUXON, "CurrentPoints")
     Return $currentLuxonPoints
-EndFunc ;==> GetLuxonTitlePoints
+EndFunc   ;==> GetLuxonTitlePoints
 
 Func GetLuxonTitle()
     Local $currentLuxonPoints = Title_GetTitleInfo($GC_E_TITLEID_LUXON, "CurrentPoints")
@@ -3620,7 +3620,7 @@ Func GetLuxonTitle()
     Else
         Return 12
     EndIf
-EndFunc ;==> GetLuxonTitle
+EndFunc   ;==> GetLuxonTitle
 #EndRegion
 
 

@@ -33,12 +33,13 @@ Global $GargPath3[4][2] = [ _ ; Reset coords
     [-11297, 16216] _
 ]
 
-Global $aGargPhrases[5] = [ _ ; Let's liven up a very mundane slow farm
+Global $aGargPhrases[6] = [ _ ; Let's liven up a very mundane slow farm
     "The gargoyle lunges. You introduce it to the floor. Permanently.", _
     "Ugly bastard. At least it died doing what it loved, being in the way.", _
     "You've killed so many of these things down here you're starting to feel bad for the stone. Almost.", _
     "Another gruesome nightmare put out of its misery. The catacombs smell worse than it did.", _
-    "It took three swings and your last shred of patience, but the gargoyle won't be anyone's problem anymore." _
+    "It took three swings and your last shred of patience, but the gargoyle won't be anyone's problem anymore.", _
+    "Can you hear that Mr Gargoyle? That's the sound of inevitability..." _
 ]
 
 Global $GargPhrase = 0
@@ -94,8 +95,6 @@ Func GargoyleSkull()
     Sleep(1000)
     
     $RunTime = TimerInit()
-
-    LogInfo("Can you hear that Mr Gargoyle? That's the sound of inevitability...")
 
     RunTo($GargPath2)
 
