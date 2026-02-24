@@ -1444,7 +1444,7 @@ Func Ident($BagIndex)
             EndIf
             Local $j = 0
             Do
-                Merchant_BuyItem($SupIDKit, 1)
+                Merchant_BuyItem($NormalIDKit, 1)
                 Sleep(1000)
                 $j = $j + 1
             Until FindIdentificationKit() <> 0 Or $j = 3
@@ -3850,6 +3850,7 @@ Global Const $SupIDKit = 5899
 Global Const $ExpertSalvKit = 2991
 Global Const $Ectoplasm_ID = 930
 Global Const $CharrIDKit = 18721
+Global Const $NormalIDKit = 2989
 
 ;~ Outpost - Map
 Global Const $Town_ID_EyeOfTheNorth = 642
