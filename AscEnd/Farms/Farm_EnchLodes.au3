@@ -104,6 +104,6 @@ Func RunToElodes($g_ai2_RunPath)
             LogError("Survivor mode activated!")
             Return
         EndIf
-        Sleep(500)
+        Sleep(100)
     Next
 EndFunc

@@ -69,7 +69,7 @@ Func RndTravel($aMapID)
     Local $Region[11]   = [2, 2, 2, 2, 2, 2, 2, -2, 1, 3, 4]
     Local $Language[11] = [0, 2, 3, 4, 5, 9, 10, 0, 0, 0, 0]
     Local $Random = Random(0, $UseDistricts - 1, 1)
- 	;MoveMap($aMapID, $Region[$Random], 0, $Language[$Random])
+    ;MoveMap($aMapID, $Region[$Random], 0, $Language[$Random])
     Map_MoveMap($aMapID, $Region[$Random], 0, $Language[5])
     Map_WaitMapLoading($aMapID, 0)
     Sleep(1000)
@@ -84,11 +84,11 @@ EndFunc   ;==>Resign
 
 Func GetIsDead($aAgent = -2)
     Return Agent_GetAgentInfo($aAgent, "IsDead")
-EndFunc	  ;==>GetIsDead
+EndFunc   ;==>GetIsDead
 
 Func GetEnergy($aAgent = -2)
     Return Agent_GetAgentInfo($aAgent, "CurrentEnergy")
-EndFunc	  ;==>GetEnergy
+EndFunc   ;==>GetEnergy
 #EndRegion
 
 #Region Movement
@@ -196,7 +196,6 @@ EndFunc   ;==>MoveUpkeepEx
 #EndRegion
 
 #Region Healing
-
 ; Healing skill IDs for Pre-Searing
 Global $g_aHealingSkills[8] = [ _
     $GC_I_SKILL_ID_HEALING_SIGNET, _
